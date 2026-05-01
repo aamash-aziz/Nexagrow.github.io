@@ -1,0 +1,1607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NexaGrow — Digital Marketing Agency</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cabinet+Grotesk:wght@400;500;700&family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<style>
+  :root {
+    --bg: #05040a;
+    --bg2: #0c0b14;
+    --bg3: #13121e;
+    --accent: #7c3aed;
+    --accent2: #a855f7;
+    --accent3: #06b6d4;
+    --gold: #f59e0b;
+    --text: #f4f3ff;
+    --muted: #9691b8;
+    --border: rgba(124,58,237,0.2);
+    --card: rgba(19,18,30,0.8);
+    --glow: rgba(124,58,237,0.15);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--text); font-family: 'Cabinet Grotesk', sans-serif; overflow-x: hidden; cursor: none; }
+
+  .cursor { position: fixed; top: 0; left: 0; width: 12px; height: 12px; background: var(--accent2); border-radius: 50%; pointer-events: none; z-index: 99999; transform: translate(-50%, -50%); transition: transform 0.1s, width 0.3s, height 0.3s, background 0.3s; mix-blend-mode: difference; }
+  .cursor-ring { position: fixed; top: 0; left: 0; width: 40px; height: 40px; border: 1px solid rgba(168,85,247,0.5); border-radius: 50%; pointer-events: none; z-index: 99998; transform: translate(-50%, -50%); transition: transform 0.15s ease, width 0.3s, height 0.3s; }
+  .cursor.hovered { width: 20px; height: 20px; background: var(--accent3); }
+  .cursor-ring.hovered { width: 60px; height: 60px; border-color: var(--accent3); }
+
+  body::before { content: ''; position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E"); pointer-events: none; z-index: 9999; opacity: 0.4; }
+
+  nav { position: fixed; top: 0; width: 100%; padding: 1.25rem 5%; display: flex; align-items: center; justify-content: space-between; z-index: 1000; background: rgba(5,4,10,0.7); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); transition: all 0.3s; }
+  nav.scrolled { padding: 0.9rem 5%; }
+  .logo { font-family: 'Syne', sans-serif; font-size: 1.6rem; font-weight: 800; background: linear-gradient(135deg, var(--accent2), var(--accent3)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: -0.03em; }
+  .logo span { color: var(--gold); -webkit-text-fill-color: var(--gold); }
+  .nav-links { display: flex; gap: 2rem; list-style: none; }
+  .nav-links a { color: var(--muted); text-decoration: none; font-size: 0.9rem; font-weight: 500; letter-spacing: 0.02em; transition: color 0.3s, transform 0.3s; position: relative; }
+  .nav-links a::after { content: ''; position: absolute; bottom: -4px; left: 0; width: 0; height: 2px; background: linear-gradient(90deg, var(--accent2), var(--accent3)); transition: width 0.4s cubic-bezier(0.34,1.56,0.64,1); }
+  .nav-links a:hover { color: var(--text); transform: translateY(-2px); }
+  .nav-links a:hover::after { width: 100%; }
+  .nav-right { display: flex; align-items: center; gap: 1rem; }
+  .nav-cta { background: linear-gradient(135deg, var(--accent), var(--accent2)); background-size: 200% 200%; color: white; border: none; padding: 0.6rem 1.5rem; border-radius: 100px; font-weight: 600; font-size: 0.9rem; cursor: pointer; transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.3s; text-decoration: none; box-shadow: 0 0 20px rgba(124,58,237,0.3); animation: slideInRight 0.6s ease both 0.3s; }
+  .nav-cta:hover { transform: translateY(-3px) scale(1.05); box-shadow: 0 0 40px rgba(124,58,237,0.6); animation: glowPulse 1.5s ease-in-out infinite; }
+
+  /* CART ICON IN NAV */
+  .cart-nav-btn { position: relative; background: rgba(124,58,237,0.12); border: 1px solid var(--border); border-radius: 100px; padding: 0.5rem 1rem; cursor: pointer; display: flex; align-items: center; gap: 6px; font-size: 0.85rem; color: var(--text); transition: all 0.2s; }
+  .cart-nav-btn:hover { border-color: var(--accent2); background: rgba(124,58,237,0.2); }
+  .cart-count { background: var(--accent2); color: white; font-size: 0.65rem; font-weight: 800; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; position: absolute; top: -6px; right: -6px; transition: transform 0.3s; }
+  .cart-count.pop { transform: scale(1.4); }
+  .cart-count.hidden { display: none; }
+
+  .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; }
+  .hamburger span { width: 24px; height: 2px; background: var(--text); border-radius: 2px; transition: all 0.3s; }
+
+  /* HERO */
+  #hero { min-height: 100vh; display: flex; align-items: center; padding: 8rem 5% 4rem; position: relative; overflow: hidden; }
+  .hero-bg { position: absolute; inset: 0; background: radial-gradient(ellipse 80% 60% at 60% 40%, rgba(124,58,237,0.12) 0%, transparent 60%), radial-gradient(ellipse 50% 40% at 20% 80%, rgba(6,182,212,0.08) 0%, transparent 50%); }
+  .hero-grid { position: absolute; inset: 0; background-image: linear-gradient(rgba(124,58,237,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(124,58,237,0.06) 1px, transparent 1px); background-size: 60px 60px; mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 30%, transparent 80%); }
+  .hero-content { position: relative; max-width: 760px; }
+  .hero-badge { display: inline-flex; align-items: center; gap: 8px; background: rgba(124,58,237,0.1); border: 1px solid rgba(124,58,237,0.3); padding: 0.4rem 1rem; border-radius: 100px; font-size: 0.8rem; color: var(--accent2); font-weight: 500; margin-bottom: 1.5rem; animation: fadeInUp 0.6s both; }
+  .hero-badge::before { content: ''; width: 6px; height: 6px; background: var(--accent2); border-radius: 50%; animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.4;transform:scale(1.5)} }
+  h1 { font-family: 'Syne', sans-serif; font-size: clamp(2.8rem, 7vw, 5.5rem); font-weight: 800; line-height: 1.05; letter-spacing: -0.04em; margin-bottom: 1.5rem; animation: fadeInUp 0.6s 0.1s both; }
+  h1 .grad { background: linear-gradient(135deg, var(--accent2) 0%, var(--accent3) 100%); background-size: 200% 200%; animation: rotateGrad 4s ease infinite; -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .hero-sub { font-size: 1.1rem; color: var(--muted); line-height: 1.7; max-width: 540px; margin-bottom: 2.5rem; animation: fadeInUp 0.6s 0.2s both; }
+  .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; animation: fadeInUp 0.6s 0.3s both; }
+  .btn-primary { background: linear-gradient(135deg, var(--accent), var(--accent2)); background-size: 200% 200%; color: white; padding: 0.85rem 2rem; border-radius: 100px; font-weight: 700; font-size: 1rem; cursor: pointer; border: none; text-decoration: none; box-shadow: 0 0 30px rgba(124,58,237,0.4); transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.3s; display: inline-flex; align-items: center; gap: 8px; position: relative; overflow: hidden; }
+  .btn-primary::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: rgba(255,255,255,0.2); transition: left 0.3s; }
+  .btn-primary:hover { transform: translateY(-4px) scale(1.05); box-shadow: 0 10px 50px rgba(124,58,237,0.7); animation: glowPulse 1s ease-in-out infinite; }
+  .btn-primary:hover::before { left: 100%; }
+  .btn-outline { background: transparent; color: var(--text); padding: 0.85rem 2rem; border-radius: 100px; font-weight: 600; font-size: 1rem; cursor: pointer; border: 1px solid var(--border); text-decoration: none; transition: all 0.4s cubic-bezier(0.34,1.56,0.64,1); display: inline-flex; align-items: center; gap: 8px; position: relative; overflow: hidden; }
+  .btn-outline::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(124,58,237,0.15), rgba(6,182,212,0.1)); opacity: 0; transition: opacity 0.3s; }
+  .btn-outline:hover { border-color: var(--accent2); color: var(--accent2); background: rgba(124,58,237,0.08); }
+  .btn-outline:hover::before { opacity: 1; }
+  .hero-stats { display: flex; gap: 3rem; margin-top: 4rem; animation: fadeInUp 0.6s 0.4s both; padding-top: 3rem; border-top: 1px solid var(--border); }
+  .hero-stat-num { font-family: 'Syne', sans-serif; font-size: 2.2rem; font-weight: 800; background: linear-gradient(135deg, var(--text), var(--accent2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .hero-stat-label { font-size: 0.85rem; color: var(--muted); margin-top: 2px; }
+  .hero-visual { position: absolute; right: 5%; top: 50%; transform: translateY(-50%); width: 420px; height: 420px; animation: float 6s ease-in-out infinite; }
+  @keyframes float { 0%,100%{transform:translateY(-50%) rotate(0deg)} 50%{transform:translateY(calc(-50% - 20px)) rotate(3deg)} }
+
+  .marquee-section { padding: 2rem 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); overflow: hidden; background: var(--bg2); }
+  .marquee-track { display: flex; gap: 3rem; white-space: nowrap; animation: marquee 20s linear infinite; }
+  .marquee-track:hover { animation-play-state: paused; }
+  @keyframes marquee { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
+  .marquee-item { display: flex; align-items: center; gap: 0.6rem; font-size: 0.9rem; color: var(--muted); font-weight: 500; flex-shrink: 0; }
+  .marquee-dot { width: 6px; height: 6px; background: var(--accent2); border-radius: 50%; }
+
+  section { padding: 7rem 5%; }
+  .section-tag { display: inline-block; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent2); margin-bottom: 1rem; }
+  h2 { font-family: 'Syne', sans-serif; font-size: clamp(2rem, 4vw, 3rem); font-weight: 800; letter-spacing: -0.03em; line-height: 1.1; margin-bottom: 1.2rem; }
+  .section-sub { font-size: 1.05rem; color: var(--muted); max-width: 540px; line-height: 1.7; }
+
+  #services { background: var(--bg); }
+  .services-header { text-align: center; margin-bottom: 4rem; }
+  .services-header .section-sub { margin: 0 auto; }
+  .services-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+  .service-card { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 2rem; transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1), border-color 0.4s, box-shadow 0.4s; position: relative; overflow: hidden; cursor: pointer; animation: slideInUp 0.6s ease both; }
+  .service-card::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(124,58,237,0.1), transparent); opacity: 0; transition: opacity 0.4s; transform: skewY(-10deg); }
+  .service-card:hover { transform: translateY(-12px) scale(1.02); border-color: var(--accent2); box-shadow: 0 30px 80px rgba(124,58,237,0.35), 0 0 30px rgba(124,58,237,0.2); }
+  .service-card:hover::before { opacity: 1; }
+  @keyframes slideInUp { from{opacity:0;transform:translateY(40px)} to{opacity:1;transform:translateY(0)} }
+  .service-card.featured { grid-column: span 2; background: linear-gradient(135deg, rgba(124,58,237,0.15), rgba(6,182,212,0.05)); border-color: rgba(124,58,237,0.4); }
+  .service-icon { width: 52px; height: 52px; background: linear-gradient(135deg, var(--accent), var(--accent2)); border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; margin-bottom: 1.2rem; transition: all 0.3s; animation: scaleIn 0.6s ease both; }\n  .service-card:hover .service-icon { transform: scale(1.15) rotate(-10deg); }
+  .service-card h3 { font-family: 'Syne', sans-serif; font-size: 1.2rem; font-weight: 700; margin-bottom: 0.5rem; letter-spacing: -0.02em; }
+  .service-card p { font-size: 0.9rem; color: var(--muted); line-height: 1.7; }
+  .service-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 1.2rem; }
+  .tag { background: rgba(124,58,237,0.1); border: 1px solid rgba(124,58,237,0.2); color: var(--accent2); font-size: 0.72rem; padding: 3px 10px; border-radius: 100px; font-weight: 500; }
+
+  #process { background: var(--bg2); }
+  .process-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 1.5rem; margin-top: 3.5rem; position: relative; }
+  .process-grid::before { content: ''; position: absolute; top: 28px; left: 12%; right: 12%; height: 1px; background: linear-gradient(90deg, transparent, var(--accent2), transparent); }
+  .process-step { text-align: center; padding: 1.5rem; animation: slideInUp 0.6s ease both; }
+  .process-step:nth-child(1) { animation-delay: 0s; }
+  .process-step:nth-child(2) { animation-delay: 0.1s; }
+  .process-step:nth-child(3) { animation-delay: 0.2s; }
+  .process-step:nth-child(4) { animation-delay: 0.3s; }
+  .step-num { width: 56px; height: 56px; border-radius: 50%; background: linear-gradient(135deg, var(--accent), var(--accent2)); background-size: 200% 200%; display: flex; align-items: center; justify-content: center; font-family: 'Syne', sans-serif; font-size: 1.2rem; font-weight: 800; margin: 0 auto 1.2rem; position: relative; z-index: 1; box-shadow: 0 0 30px rgba(124,58,237,0.4); animation: bounce 3s ease-in-out infinite; transition: all 0.3s; }
+  .process-step:hover .step-num { transform: scale(1.15); box-shadow: 0 0 50px rgba(124,58,237,0.7); }
+  .process-step h3 { font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 700; margin-bottom: 0.5rem; }
+  .process-step p { font-size: 0.85rem; color: var(--muted); line-height: 1.6; }
+
+  #results { background: var(--bg); }
+  .metrics-row { display: grid; grid-template-columns: repeat(4,1fr); gap: 1.5rem; margin: 3.5rem 0; }
+  .metric-card { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 2rem; text-align: center; transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.3s; animation: fadeInUp 0.6s ease both; }
+  .metric-card:hover { transform: translateY(-8px) scale(1.02); box-shadow: 0 20px 60px rgba(124,58,237,0.2); }
+  .metric-num { font-family: 'Syne', sans-serif; font-size: 2.8rem; font-weight: 800; background: linear-gradient(135deg, var(--accent2), var(--accent3)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; line-height: 1; }
+  .metric-label { font-size: 0.85rem; color: var(--muted); margin-top: 0.5rem; }
+
+  #portfolio { background: var(--bg2); }
+  .portfolio-filters { display: flex; gap: 0.75rem; margin: 2rem 0 3rem; flex-wrap: wrap; }
+  .filter-btn { padding: 0.5rem 1.2rem; border-radius: 100px; border: 1px solid var(--border); background: transparent; color: var(--muted); font-size: 0.85rem; font-weight: 500; cursor: pointer; transition: all 0.4s cubic-bezier(0.34,1.56,0.64,1); font-family: 'Cabinet Grotesk', sans-serif; position: relative; overflow: hidden; }
+  .filter-btn::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, var(--accent), var(--accent2)); transform: scaleX(0); transform-origin: left; transition: transform 0.3s; z-index: -1; }
+  .filter-btn.active, .filter-btn:hover { background: var(--accent); color: white; border-color: var(--accent); }
+  .filter-btn.active::before, .filter-btn:hover::before { transform: scaleX(1); }
+  .portfolio-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.5rem; }
+  .portfolio-card { border-radius: 16px; overflow: hidden; border: 1px solid var(--border); background: var(--card); transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.4s; cursor: pointer; animation: fadeInUp 0.6s ease both; }
+  .portfolio-card:hover { transform: translateY(-10px) scale(1.03); box-shadow: 0 30px 80px rgba(124,58,237,0.25), 0 0 30px rgba(6,182,212,0.2); }
+  .portfolio-img { height: 200px; display: flex; align-items: center; justify-content: center; font-size: 3rem; position: relative; overflow: hidden; }
+  .portfolio-img .overlay { position: absolute; inset: 0; background: rgba(124,58,237,0.8); display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s; font-size: 1rem; font-weight: 600; color: white; }
+  .portfolio-card:hover .overlay { opacity: 1; }
+  .portfolio-info { padding: 1.2rem 1.5rem; }
+  .portfolio-cat { font-size: 0.75rem; color: var(--accent2); font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; }
+  .portfolio-info h3 { font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 700; margin-top: 0.3rem; }
+  .portfolio-result { font-size: 0.85rem; color: var(--muted); margin-top: 0.3rem; }
+
+  #testimonials { background: var(--bg); }
+  .testimonials-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.5rem; margin-top: 3.5rem; }
+  .testimonial-card { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 2rem; position: relative; animation: fadeInUp 0.6s ease both; transition: transform 0.3s, box-shadow 0.3s; }
+  .testimonial-card:hover { transform: translateY(-6px); box-shadow: 0 20px 60px rgba(124,58,237,0.2); }
+  .testimonial-card::before { content: '"'; font-size: 6rem; font-family: serif; color: var(--accent); opacity: 0.15; position: absolute; top: -10px; left: 20px; line-height: 1; animation: fadeInUp 0.8s ease both 0.2s; }
+  .stars { color: var(--gold); font-size: 0.9rem; margin-bottom: 1rem; }
+  .testimonial-text { font-size: 0.95rem; color: var(--text); line-height: 1.7; margin-bottom: 1.5rem; }
+  .testimonial-author { display: flex; align-items: center; gap: 12px; }
+  .author-avatar { width: 44px; height: 44px; border-radius: 50%; background: linear-gradient(135deg, var(--accent), var(--accent3)); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.9rem; flex-shrink: 0; }
+  .author-name { font-weight: 700; font-size: 0.9rem; }
+  .author-role { font-size: 0.8rem; color: var(--muted); }
+
+  /* ============ PRICING — ENHANCED ============ */
+  #pricing { background: var(--bg2); }
+  .pricing-header { text-align: center; margin-bottom: 4rem; }
+  .pricing-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.5rem; max-width: 1100px; margin: 0 auto; }
+  .pricing-card { background: var(--card); border: 1px solid var(--border); border-radius: 24px; padding: 2.5rem; position: relative; transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.4s, background 0.4s; animation: fadeInUp 0.6s ease both; }
+  .pricing-card.popular { border-color: var(--accent2); background: linear-gradient(135deg, rgba(124,58,237,0.15), rgba(6,182,212,0.05)); animation: glowPulse 2s ease-in-out infinite; }
+  .pricing-card:hover { transform: translateY(-12px) scale(1.02); box-shadow: 0 40px 100px rgba(124,58,237,0.35); }
+  .popular-badge { position: absolute; top: -14px; left: 50%; transform: translateX(-50%); background: linear-gradient(135deg, var(--accent), var(--accent2)); color: white; font-size: 0.75rem; font-weight: 700; padding: 4px 16px; border-radius: 100px; white-space: nowrap; }
+  .plan-name { font-size: 0.85rem; color: var(--muted); font-weight: 500; text-transform: uppercase; letter-spacing: 0.1em; }
+  .plan-price { font-family: 'Syne', sans-serif; font-size: 3rem; font-weight: 800; line-height: 1; margin: 0.8rem 0; color: var(--text); }
+  .plan-price span { font-size: 1.2rem; color: var(--muted); }
+  .plan-desc { font-size: 0.9rem; color: var(--muted); margin-bottom: 1.5rem; }
+  .plan-features { list-style: none; margin-bottom: 1.5rem; }
+  .plan-features li { font-size: 0.9rem; padding: 0.5rem 0; border-bottom: 1px solid rgba(255,255,255,0.05); display: flex; align-items: center; gap: 8px; color: var(--text); }
+  .plan-features li::before { content: '✓'; color: var(--accent2); font-weight: 700; }
+  .plan-features li.no { color: var(--muted); }
+  .plan-features li.no::before { content: '×'; color: rgba(255,255,255,0.2); }
+
+  /* ADD TO CART BUTTON */
+  .add-to-cart-btn {
+    width: 100%; padding: 0.9rem; border-radius: 14px;
+    font-family: 'Cabinet Grotesk', sans-serif; font-size: 1rem; font-weight: 700;
+    cursor: pointer; transition: all 0.4s cubic-bezier(0.34,1.56,0.64,1); position: relative; overflow: hidden;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    letter-spacing: 0.01em;
+  }
+  .add-to-cart-btn.primary-cart {
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    background-size: 200% 200%;
+    color: white; border: none;
+    box-shadow: 0 0 30px rgba(124,58,237,0.4);
+  }
+  .add-to-cart-btn.primary-cart:hover { box-shadow: 0 0 50px rgba(124,58,237,0.7); transform: translateY(-3px) scale(1.05); animation: glowPulse 1s ease-in-out infinite; }
+  .add-to-cart-btn.outline-cart {
+    background: transparent; color: var(--text);
+    border: 1px solid var(--border);
+  }
+  .add-to-cart-btn.outline-cart:hover { border-color: var(--accent2); color: var(--accent2); background: rgba(124,58,237,0.08); transform: translateY(-2px); }
+  .add-to-cart-btn.added {
+    background: linear-gradient(135deg, #059669, #10b981) !important;
+    border-color: #10b981 !important;
+    color: white !important;
+  }
+  .add-to-cart-btn::after {
+    content: ''; position: absolute; inset: 0;
+    background: rgba(255,255,255,0.15);
+    transform: scaleX(0); transform-origin: left;
+    transition: transform 0.3s;
+  }
+  .add-to-cart-btn:active::after { transform: scaleX(1); }
+
+  /* CART DRAWER OVERLAY */
+  .cart-overlay {
+    position: fixed; inset: 0;
+    background: rgba(5,4,10,0.7);
+    backdrop-filter: blur(6px);
+    z-index: 10000;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.3s;
+  }
+  .cart-overlay.open { opacity: 1; pointer-events: all; }
+
+  /* CART DRAWER */
+  .cart-drawer {
+    position: fixed; top: 0; right: 0; bottom: 0;
+    width: 420px; max-width: 95vw;
+    background: var(--bg3);
+    border-left: 1px solid var(--border);
+    z-index: 10001;
+    transform: translateX(110%);
+    transition: transform 0.4s cubic-bezier(0.34,1.05,0.64,1);
+    display: flex; flex-direction: column;
+    box-shadow: -20px 0 80px rgba(0,0,0,0.6);
+  }
+  .cart-drawer.open { transform: translateX(0); }
+
+  .cart-drawer-header {
+    padding: 1.5rem 1.8rem;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .cart-drawer-header h3 { font-family: 'Syne', sans-serif; font-size: 1.2rem; font-weight: 800; display: flex; align-items: center; gap: 10px; }
+  .cart-close-btn { width: 36px; height: 36px; border-radius: 50%; background: rgba(255,255,255,0.06); border: 1px solid var(--border); color: var(--text); font-size: 1.2rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+  .cart-close-btn:hover { background: rgba(255,255,255,0.12); }
+
+  .cart-body { flex: 1; overflow-y: auto; padding: 1.5rem 1.8rem; }
+  .cart-body::-webkit-scrollbar { width: 4px; }
+  .cart-body::-webkit-scrollbar-track { background: transparent; }
+  .cart-body::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 2px; }
+
+  .cart-empty { text-align: center; padding: 3rem 1rem; color: var(--muted); }
+  .cart-empty .cart-empty-icon { font-size: 3rem; margin-bottom: 1rem; opacity: 0.5; }
+  .cart-empty p { font-size: 0.95rem; }
+
+  .cart-item {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 1.2rem;
+    margin-bottom: 1rem;
+    position: relative;
+    animation: slideInItem 0.3s ease both;
+  }
+  @keyframes slideInItem { from{opacity:0;transform:translateX(20px)} to{opacity:1;transform:translateX(0)} }
+  .cart-item-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem; }
+  .cart-item-name { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1rem; }
+  .cart-item-price { font-family: 'Syne', sans-serif; font-weight: 800; color: var(--accent2); font-size: 1.1rem; white-space: nowrap; }
+  .cart-item-desc { font-size: 0.8rem; color: var(--muted); line-height: 1.5; margin-bottom: 0.8rem; }
+  .cart-item-remove { background: none; border: none; color: rgba(255,255,255,0.3); cursor: pointer; font-size: 0.8rem; padding: 0; transition: color 0.2s; display: flex; align-items: center; gap: 4px; }
+  .cart-item-remove:hover { color: #ef4444; }
+  .cart-item-badge { display: inline-flex; align-items: center; gap: 4px; background: rgba(124,58,237,0.12); border: 1px solid rgba(124,58,237,0.2); padding: 2px 8px; border-radius: 100px; font-size: 0.72rem; color: var(--accent2); font-weight: 600; margin-top: 0.3rem; }
+
+  .cart-footer {
+    padding: 1.5rem 1.8rem;
+    border-top: 1px solid var(--border);
+  }
+  .cart-total-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+  .cart-total-label { font-size: 0.9rem; color: var(--muted); }
+  .cart-total-amount { font-family: 'Syne', sans-serif; font-size: 1.6rem; font-weight: 800; background: linear-gradient(135deg, var(--accent2), var(--accent3)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .cart-period-note { font-size: 0.75rem; color: var(--muted); text-align: right; margin-bottom: 1.2rem; }
+  .checkout-btn { width: 100%; padding: 1rem; border-radius: 14px; background: linear-gradient(135deg, var(--accent), var(--accent2)); color: white; border: none; font-family: 'Cabinet Grotesk', sans-serif; font-size: 1rem; font-weight: 700; cursor: pointer; transition: all 0.25s; box-shadow: 0 0 30px rgba(124,58,237,0.4); display: flex; align-items: center; justify-content: center; gap: 8px; }
+  .checkout-btn:hover { transform: translateY(-2px); box-shadow: 0 0 50px rgba(124,58,237,0.6); }
+  .checkout-btn:disabled { opacity: 0.5; pointer-events: none; }
+  .cart-security-note { text-align: center; font-size: 0.75rem; color: var(--muted); margin-top: 0.8rem; display: flex; align-items: center; justify-content: center; gap: 5px; }
+
+  /* PAYMENT GATEWAY MODAL */
+  .payment-overlay {
+    position: fixed; inset: 0;
+    background: rgba(5,4,10,0.85);
+    backdrop-filter: blur(10px);
+    z-index: 20000;
+    display: flex; align-items: center; justify-content: center;
+    padding: 1rem;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.3s;
+  }
+  .payment-overlay.open { opacity: 1; pointer-events: all; }
+
+  .payment-modal {
+    background: var(--bg3);
+    border: 1px solid rgba(124,58,237,0.3);
+    border-radius: 28px;
+    width: 100%; max-width: 540px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 40px 120px rgba(0,0,0,0.8), 0 0 0 1px rgba(124,58,237,0.1);
+    transform: scale(0.9) translateY(20px);
+    transition: transform 0.4s cubic-bezier(0.34,1.2,0.64,1);
+    scrollbar-width: none;
+  }
+  .payment-modal::-webkit-scrollbar { display: none; }
+  .payment-overlay.open .payment-modal { transform: scale(1) translateY(0); }
+
+  .payment-modal-header {
+    padding: 1.8rem 2rem 1.2rem;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .payment-modal-header h3 { font-family: 'Syne', sans-serif; font-size: 1.3rem; font-weight: 800; }
+  .payment-close { width: 36px; height: 36px; border-radius: 50%; background: rgba(255,255,255,0.06); border: 1px solid var(--border); color: var(--text); font-size: 1.1rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+  .payment-close:hover { background: rgba(255,255,255,0.12); }
+
+  .payment-body { padding: 1.8rem 2rem; }
+
+  /* STEP INDICATOR */
+  .payment-steps { display: flex; align-items: center; margin-bottom: 2rem; }
+  .payment-step-item { display: flex; flex-direction: column; align-items: center; flex: 1; }
+  .step-circle { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 700; border: 2px solid var(--border); color: var(--muted); transition: all 0.3s; background: var(--bg2); }
+  .step-circle.active { background: linear-gradient(135deg, var(--accent), var(--accent2)); border-color: transparent; color: white; box-shadow: 0 0 20px rgba(124,58,237,0.5); }
+  .step-circle.done { background: #10b981; border-color: #10b981; color: white; }
+  .step-label { font-size: 0.7rem; color: var(--muted); margin-top: 4px; font-weight: 500; }
+  .step-line { flex: 1; height: 1px; background: var(--border); margin: 0 8px; margin-bottom: 18px; }
+  .step-line.active { background: linear-gradient(90deg, var(--accent), var(--accent2)); }
+
+  /* ORDER SUMMARY IN PAYMENT */
+  .order-summary {
+    background: rgba(124,58,237,0.06);
+    border: 1px solid rgba(124,58,237,0.15);
+    border-radius: 16px;
+    padding: 1.2rem 1.4rem;
+    margin-bottom: 1.5rem;
+  }
+  .order-summary h4 { font-family: 'Syne', sans-serif; font-size: 0.85rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 1rem; }
+  .order-line { display: flex; justify-content: space-between; align-items: center; padding: 0.4rem 0; font-size: 0.9rem; }
+  .order-line.total { border-top: 1px solid var(--border); padding-top: 0.8rem; margin-top: 0.4rem; font-weight: 700; }
+  .order-line.total .order-val { font-family: 'Syne', sans-serif; font-size: 1.2rem; color: var(--accent2); }
+  .order-key { color: var(--muted); }
+  .order-val { color: var(--text); font-weight: 500; }
+
+  /* PAYMENT FORM FIELDS */
+  .payment-section-title { font-family: 'Syne', sans-serif; font-size: 0.95rem; font-weight: 700; margin-bottom: 1rem; display: flex; align-items: center; gap: 8px; }
+  .payment-form-grid { display: grid; gap: 1rem; margin-bottom: 1.5rem; }
+  .payment-form-grid.two-col { grid-template-columns: 1fr 1fr; }
+  .pf-group { display: flex; flex-direction: column; gap: 0.4rem; }
+  .pf-group label { font-size: 0.8rem; color: var(--muted); font-weight: 500; }
+  .pf-input {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border);
+    border-radius: 10px; padding: 0.75rem 1rem;
+    color: var(--text); font-family: 'Cabinet Grotesk', sans-serif;
+    font-size: 0.9rem; outline: none; transition: border-color 0.2s, box-shadow 0.2s;
+    width: 100%;
+  }
+  .pf-input:focus { border-color: var(--accent2); box-shadow: 0 0 0 3px rgba(168,85,247,0.1); }
+  .pf-input::placeholder { color: rgba(150,145,184,0.4); }
+
+  /* PAYMENT METHOD TABS */
+  .pay-methods { display: flex; gap: 8px; margin-bottom: 1.5rem; flex-wrap: wrap; }
+  .pay-method-tab {
+    flex: 1; min-width: 80px; padding: 0.7rem; border-radius: 10px;
+    border: 1px solid var(--border); background: transparent;
+    color: var(--muted); cursor: pointer;
+    font-family: 'Cabinet Grotesk', sans-serif; font-size: 0.82rem; font-weight: 600;
+    transition: all 0.2s; text-align: center;
+    display: flex; flex-direction: column; align-items: center; gap: 4px;
+  }
+  .pay-method-tab .pm-icon { font-size: 1.3rem; }
+  .pay-method-tab.active { border-color: var(--accent2); background: rgba(168,85,247,0.1); color: var(--accent2); }
+  .pay-method-tab:hover:not(.active) { border-color: rgba(168,85,247,0.3); }
+
+  /* CARD VISUAL */
+  .card-visual {
+    background: linear-gradient(135deg, #1e1a30, #2a1e3e);
+    border-radius: 16px; padding: 1.4rem; margin-bottom: 1.5rem;
+    position: relative; overflow: hidden; border: 1px solid rgba(124,58,237,0.2);
+    min-height: 130px;
+  }
+  .card-visual::before { content: ''; position: absolute; top: -40px; right: -40px; width: 140px; height: 140px; background: radial-gradient(circle, rgba(168,85,247,0.3), transparent 60%); }
+  .card-chip { font-size: 1.4rem; margin-bottom: 0.8rem; }
+  .card-number-display { font-family: 'Syne', sans-serif; font-size: 1rem; letter-spacing: 0.2em; color: rgba(255,255,255,0.7); margin-bottom: 0.8rem; }
+  .card-bottom { display: flex; justify-content: space-between; }
+  .card-holder-display { font-size: 0.75rem; }
+  .card-holder-display .cl { color: var(--muted); font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.08em; }
+  .card-holder-display .cv { font-weight: 600; }
+  .card-network { font-size: 1.8rem; opacity: 0.6; }
+
+  /* PAY NOW BUTTON */
+  .pay-now-btn { width: 100%; padding: 1rem; border-radius: 14px; background: linear-gradient(135deg, var(--accent), var(--accent2)); color: white; border: none; font-family: 'Cabinet Grotesk', sans-serif; font-size: 1.05rem; font-weight: 700; cursor: pointer; transition: all 0.25s; box-shadow: 0 0 30px rgba(124,58,237,0.4); display: flex; align-items: center; justify-content: center; gap: 8px; }
+  .pay-now-btn:hover { transform: translateY(-2px); box-shadow: 0 0 50px rgba(124,58,237,0.6); }
+  .pay-now-btn:disabled { opacity: 0.6; pointer-events: none; }
+  .payment-security { display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 0.75rem; color: var(--muted); margin-top: 0.8rem; }
+
+  /* SUCCESS STEP */
+  .payment-success { text-align: center; padding: 2rem 1rem; animation: fadeInUp 0.5s both; }
+  .success-icon { font-size: 4rem; margin-bottom: 1rem; animation: bounceIn 0.6s both; }
+  @keyframes bounceIn { 0%{transform:scale(0)} 60%{transform:scale(1.2)} 100%{transform:scale(1)} }
+  .payment-success h3 { font-family: 'Syne', sans-serif; font-size: 1.5rem; font-weight: 800; margin-bottom: 0.5rem; }
+  .payment-success p { color: var(--muted); font-size: 0.95rem; line-height: 1.6; margin-bottom: 1.5rem; }
+  .order-ref { background: rgba(124,58,237,0.1); border: 1px solid rgba(124,58,237,0.2); border-radius: 10px; padding: 0.6rem 1.2rem; font-family: 'Syne', sans-serif; font-weight: 700; color: var(--accent2); font-size: 0.9rem; display: inline-block; margin-bottom: 1.5rem; }
+  .success-actions { display: flex; gap: 0.8rem; justify-content: center; flex-wrap: wrap; }
+
+  /* PAYMENT METHOD PANELS */
+  .payment-panel { display: none; }
+  .payment-panel.active { display: block; }
+
+  /* TEAM */
+  #team { background: var(--bg); }
+  .team-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 1.5rem; margin-top: 3.5rem; }
+  .team-card { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 2rem; text-align: center; transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.3s, border-color 0.3s; animation: scaleIn 0.6s ease both; }
+  .team-card:hover { transform: translateY(-8px) scale(1.02); box-shadow: 0 30px 80px rgba(124,58,237,0.2); border-color: var(--accent2); }
+  .team-avatar { width: 80px; height: 80px; border-radius: 50%; margin: 0 auto 1rem; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; background: linear-gradient(135deg, var(--accent), var(--accent2)); background-size: 200% 200%; box-shadow: 0 0 30px rgba(124,58,237,0.3); transition: all 0.3s; animation: bounce 4s ease-in-out infinite; }
+  .team-card:hover .team-avatar { animation: none; transform: scale(1.2) rotate(5deg); box-shadow: 0 0 50px rgba(124,58,237,0.6); }
+  .team-card h3 { font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 700; }
+  .team-role { font-size: 0.8rem; color: var(--accent2); margin: 0.25rem 0 0.8rem; font-weight: 500; }
+  .team-card p { font-size: 0.82rem; color: var(--muted); line-height: 1.6; }
+  .team-social { display: flex; justify-content: center; gap: 8px; margin-top: 1rem; }
+  .social-btn { width: 32px; height: 32px; border-radius: 8px; background: rgba(124,58,237,0.1); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 0.8rem; cursor: pointer; transition: all 0.2s; color: var(--muted); }
+  .social-btn:hover { background: var(--accent); color: white; border-color: var(--accent); }
+
+  #faq { background: var(--bg2); }
+  .faq-layout { display: grid; grid-template-columns: 1fr 1.5fr; gap: 5rem; align-items: start; }
+  .faq-item { border-bottom: 1px solid var(--border); padding: 1.2rem 0; animation: fadeInUp 0.6s ease both; }
+  .faq-item:nth-child(1) { animation-delay: 0s; }
+  .faq-item:nth-child(2) { animation-delay: 0.1s; }
+  .faq-item:nth-child(3) { animation-delay: 0.2s; }
+  .faq-item:nth-child(4) { animation-delay: 0.3s; }
+  .faq-q { display: flex; justify-content: space-between; align-items: center; cursor: pointer; font-weight: 600; font-size: 0.95rem; transition: color 0.2s; }
+  .faq-q:hover { color: var(--accent2); }
+  .faq-toggle { width: 28px; height: 28px; flex-shrink: 0; background: rgba(124,58,237,0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; transition: all 0.4s cubic-bezier(0.34,1.56,0.64,1); color: var(--accent2); border: 1px solid rgba(124,58,237,0.2); }
+  .faq-item.open .faq-toggle { transform: rotate(45deg) scale(1.1); background: var(--accent); color: white; box-shadow: 0 0 20px rgba(124,58,237,0.4); }
+  .faq-a { font-size: 0.9rem; color: var(--muted); line-height: 1.7; max-height: 0; overflow: hidden; transition: max-height 0.4s ease, padding 0.3s; }
+  .faq-item.open .faq-a { max-height: 200px; padding-top: 0.75rem; }
+
+  #cta { background: var(--bg); padding: 7rem 5%; }
+  .cta-box { background: linear-gradient(135deg, rgba(124,58,237,0.2), rgba(6,182,212,0.1)); border: 1px solid rgba(124,58,237,0.3); border-radius: 32px; padding: 5rem; text-align: center; position: relative; overflow: hidden; animation: slideInUp 0.8s ease both; transition: all 0.4s; }
+  .cta-box:hover { border-color: rgba(124,58,237,0.6); box-shadow: 0 0 60px rgba(124,58,237,0.2); }
+  .cta-box::before { content: ''; position: absolute; top: -100px; left: 50%; transform: translateX(-50%); width: 600px; height: 300px; background: radial-gradient(ellipse, rgba(124,58,237,0.3), transparent 70%); pointer-events: none; animation: rotateGrad 6s ease infinite; }
+  .cta-box h2 { font-size: clamp(2rem, 5vw, 3.5rem); max-width: 700px; margin: 0 auto 1rem; }
+  .cta-box p { color: var(--muted); font-size: 1.05rem; margin-bottom: 2.5rem; max-width: 500px; margin-left: auto; margin-right: auto; }
+  .cta-actions { display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; }
+
+  #contact { background: var(--bg2); }
+  .contact-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; }
+  .contact-form { display: flex; flex-direction: column; gap: 1.2rem; }
+  .form-group { display: flex; flex-direction: column; gap: 0.4rem; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  label { font-size: 0.85rem; font-weight: 500; color: var(--muted); }
+  input, textarea, select { background: rgba(255,255,255,0.04); border: 1px solid var(--border); border-radius: 12px; padding: 0.85rem 1rem; color: var(--text); font-family: 'Cabinet Grotesk', sans-serif; font-size: 0.95rem; transition: border-color 0.2s, box-shadow 0.2s; outline: none; }
+  input:focus, textarea:focus, select:focus { border-color: var(--accent2); box-shadow: 0 0 0 3px rgba(168,85,247,0.1); }
+  input::placeholder, textarea::placeholder { color: rgba(150,145,184,0.5); }
+  textarea { resize: vertical; min-height: 140px; }
+  select { cursor: pointer; appearance: none; }
+  option { background: var(--bg2); }
+  .contact-info { display: flex; flex-direction: column; gap: 2rem; }
+  .contact-detail { display: flex; gap: 1rem; align-items: flex-start; }
+  .contact-icon { width: 48px; height: 48px; border-radius: 12px; background: rgba(124,58,237,0.1); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0; }
+  .contact-detail-text h4 { font-weight: 600; margin-bottom: 0.2rem; }
+  .contact-detail-text p { font-size: 0.9rem; color: var(--muted); }
+
+  footer { background: var(--bg); border-top: 1px solid var(--border); padding: 4rem 5% 2rem; }
+  .footer-top { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 3rem; margin-bottom: 3rem; }
+  .footer-brand p { font-size: 0.9rem; color: var(--muted); line-height: 1.7; margin: 1rem 0 1.5rem; max-width: 300px; }
+  .footer-social { display: flex; gap: 0.75rem; }
+  .footer-col h4 { font-family: 'Syne', sans-serif; font-size: 0.9rem; font-weight: 700; margin-bottom: 1.2rem; }
+  .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 0.7rem; }
+  .footer-col ul a { font-size: 0.875rem; color: var(--muted); text-decoration: none; transition: color 0.2s; }
+  .footer-col ul a:hover { color: var(--text); }
+  .footer-bottom { display: flex; justify-content: space-between; align-items: center; padding-top: 2rem; border-top: 1px solid var(--border); font-size: 0.82rem; color: var(--muted); }
+  .footer-bottom a { color: var(--accent2); text-decoration: none; }
+
+  .back-to-top { position: fixed; bottom: 2rem; right: 2rem; width: 48px; height: 48px; border-radius: 50%; background: linear-gradient(135deg, var(--accent), var(--accent2)); background-size: 200% 200%; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; cursor: pointer; transition: all 0.3s cubic-bezier(0.34,1.56,0.64,1); box-shadow: 0 0 30px rgba(124,58,237,0.4); opacity: 0; transform: translateY(20px); z-index: 100; }
+  .back-to-top.visible { opacity: 1; transform: translateY(0); animation: bounce 2s ease-in-out infinite; }
+  .back-to-top:hover { transform: translateY(-6px); animation: none; box-shadow: 0 0 60px rgba(124,58,237,0.7); }
+
+  .chat-widget { position: fixed; bottom: 2rem; left: 2rem; z-index: 100; }
+  .chat-btn { width: 56px; height: 56px; border-radius: 50%; background: linear-gradient(135deg, var(--accent3), var(--accent)); background-size: 200% 200%; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; cursor: pointer; box-shadow: 0 0 30px rgba(6,182,212,0.4); transition: transform 0.3s, box-shadow 0.3s; animation: bounce 3s ease-in-out infinite; }
+  .chat-btn:hover { transform: scale(1.15); box-shadow: 0 0 50px rgba(6,182,212,0.7); animation: none; }
+  .chat-popup { position: absolute; bottom: 70px; left: 0; width: 300px; background: var(--bg3); border: 1px solid var(--border); border-radius: 20px; padding: 1.5rem; display: none; box-shadow: 0 20px 60px rgba(0,0,0,0.5); animation: slideUp 0.4s cubic-bezier(0.34,1.56,0.64,1); }
+  @keyframes slideUp { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+  .chat-popup h4 { font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 700; margin-bottom: 0.3rem; }
+  .chat-popup p { font-size: 0.85rem; color: var(--muted); margin-bottom: 1rem; }
+  .chat-input-row { display: flex; gap: 8px; }
+  .chat-input-row input { flex: 1; border-radius: 100px; padding: 0.6rem 1rem; font-size: 0.85rem; }
+  .chat-send { width: 36px; height: 36px; border-radius: 50%; flex-shrink: 0; background: var(--accent); border: none; color: white; cursor: pointer; font-size: 1rem; transition: background 0.2s; }
+  .chat-send:hover { background: var(--accent2); }
+
+  @keyframes fadeInUp { from{opacity:0;transform:translateY(30px)} to{opacity:1;transform:translateY(0)} }
+  @keyframes slideInLeft { from{opacity:0;transform:translateX(-40px)} to{opacity:1;transform:translateX(0)} }
+  @keyframes slideInRight { from{opacity:0;transform:translateX(40px)} to{opacity:1;transform:translateX(0)} }
+  @keyframes scaleIn { from{opacity:0;transform:scale(0.9)} to{opacity:1;transform:scale(1)} }
+  @keyframes shimmer { 0%{background-position:200% center} 100%{background-position:-200% center} }
+  @keyframes glowPulse { 0%,100%{box-shadow:0 0 30px rgba(124,58,237,0.4)} 50%{box-shadow:0 0 60px rgba(124,58,237,0.8)} }
+  @keyframes rotateGrad { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
+  @keyframes typewriter { from{width:0} to{width:100%} }
+  @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+  
+  .reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.6s ease, transform 0.6s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+  .reveal-delay-1 { transition-delay: 0.1s; }
+  .reveal-delay-2 { transition-delay: 0.2s; }
+  .reveal-delay-3 { transition-delay: 0.3s; }
+
+  .country-bar { position: fixed; top: 0; left: 0; right: 0; background: rgba(5,4,10,0.97); border-bottom: 1px solid rgba(124,58,237,0.3); z-index: 1100; padding: 0.45rem 5%; display: flex; align-items: center; justify-content: flex-end; gap: 1rem; font-size: 0.8rem; color: var(--muted); }
+  .country-select-wrap { display: flex; align-items: center; gap: 8px; }
+  .country-select-wrap label { font-size: 0.78rem; color: var(--muted); white-space: nowrap; }
+  .country-select { background: rgba(124,58,237,0.12); border: 1px solid rgba(124,58,237,0.3); color: var(--text); font-size: 0.8rem; padding: 3px 10px; border-radius: 8px; cursor: pointer; font-family: 'Cabinet Grotesk', sans-serif; outline: none; transition: border-color 0.2s; }
+  .country-select:focus { border-color: var(--accent2); }
+  .country-select option { background: #0c0b14; }
+  .currency-badge { background: linear-gradient(135deg, var(--accent), var(--accent2)); color: white; font-size: 0.72rem; font-weight: 700; padding: 3px 12px; border-radius: 100px; letter-spacing: 0.05em; white-space: nowrap; }
+  body.has-countrybar nav { top: 36px; }
+
+  .toast-notif { position: fixed; bottom: 5.5rem; right: 1.5rem; background: var(--bg3); border: 1px solid rgba(6,182,212,0.5); border-radius: 16px; padding: 1rem 1.2rem; display: flex; align-items: flex-start; gap: 12px; z-index: 9000; max-width: 310px; min-width: 260px; transform: translateY(120px); opacity: 0; transition: all 0.45s cubic-bezier(0.34,1.56,0.64,1); box-shadow: 0 20px 60px rgba(0,0,0,0.5); }
+  .toast-notif.show { transform: translateY(0); opacity: 1; }
+  .toast-icon { font-size: 1.6rem; flex-shrink: 0; margin-top: 2px; }
+  .toast-text h5 { font-family: 'Syne',sans-serif; font-size: 0.9rem; font-weight: 700; margin: 0 0 3px; color: var(--text); }
+  .toast-text p { font-size: 0.78rem; color: var(--muted); margin: 0; line-height: 1.4; }
+  .toast-close { position: absolute; top: 8px; right: 10px; background: none; border: none; color: var(--muted); cursor: pointer; font-size: 1rem; line-height: 1; padding: 0; }
+  .toast-close:hover { color: var(--text); }
+
+  @media (max-width: 1024px) {
+    .services-grid { grid-template-columns: repeat(2,1fr); }
+    .service-card.featured { grid-column: span 2; }
+    .metrics-row, .team-grid { grid-template-columns: repeat(2,1fr); }
+    .testimonials-grid { grid-template-columns: repeat(2,1fr); }
+    .portfolio-grid { grid-template-columns: repeat(2,1fr); }
+    .footer-top { grid-template-columns: 1fr 1fr; }
+    .hero-visual { display: none; }
+    .process-grid { grid-template-columns: repeat(2,1fr); }
+    .process-grid::before { display: none; }
+  }
+  @media (max-width: 768px) {
+    .nav-links, .nav-cta { display: none; }
+    .hamburger { display: flex; }
+    h1 { font-size: 2.4rem; }
+    .hero-stats { gap: 1.2rem; flex-wrap: wrap; }
+    .services-grid, .portfolio-grid { grid-template-columns: 1fr; }
+    .service-card.featured { grid-column: span 1; }
+    .pricing-grid { grid-template-columns: 1fr; }
+    .faq-layout, .contact-layout { grid-template-columns: 1fr; gap: 2rem; }
+    .testimonials-grid, .team-grid { grid-template-columns: 1fr; }
+    .metrics-row { grid-template-columns: repeat(2,1fr); }
+    .cta-box { padding: 2rem 1.2rem; }
+    .footer-top { grid-template-columns: 1fr; gap: 1.5rem; }
+    .form-row { grid-template-columns: 1fr; }
+    section { padding: 4rem 4%; }
+    .country-bar { padding: 0.4rem 4%; gap: 0.5rem; }
+    .cart-drawer { width: 100%; }
+    .payment-form-grid.two-col { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 576px) {
+    h1 { font-size: 1.9rem; }
+    .hero-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 0.9rem; }
+    .metrics-row { grid-template-columns: 1fr 1fr; }
+    .process-grid { grid-template-columns: 1fr; }
+    .cta-actions, .hero-actions { flex-direction: column; align-items: stretch; }
+    .hero-actions a { justify-content: center; text-align: center; }
+    .toast-notif { right: 0.75rem; left: 0.75rem; max-width: 100%; }
+    .country-select-wrap label { display: none; }
+    nav { padding: 0.9rem 4%; }
+    .logo { font-size: 1.4rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- COUNTRY BAR -->
+<div class="country-bar" id="countryBar">
+  <span id="countryGreeting" style="color:var(--muted);font-size:0.78rem">🌍 Welcome!</span>
+  <div class="country-select-wrap">
+    <label for="countrySelect">🌐 Country:</label>
+    <select class="country-select" id="countrySelect" onchange="changeCurrency(this.value)">
+      <option value="PK">🇵🇰 Pakistan</option>
+      <option value="US">🇺🇸 United States</option>
+      <option value="GB">🇬🇧 United Kingdom</option>
+      <option value="AE">🇦🇪 UAE</option>
+      <option value="SA">🇸🇦 Saudi Arabia</option>
+      <option value="IN">🇮🇳 India</option>
+      <option value="CA">🇨🇦 Canada</option>
+      <option value="AU">🇦🇺 Australia</option>
+      <option value="DE">🇩🇪 Germany</option>
+      <option value="FR">🇫🇷 France</option>
+    </select>
+  </div>
+  <div class="currency-badge" id="currencyBadge">PKR ₨</div>
+</div>
+
+<!-- TOAST NOTIFICATION -->
+<div class="toast-notif" id="toastNotif">
+  <button class="toast-close" onclick="document.getElementById('toastNotif').classList.remove('show')">×</button>
+  <div class="toast-icon" id="toastIcon">✅</div>
+  <div class="toast-text">
+    <h5 id="toastTitle">Added to Cart!</h5>
+    <p id="toastMsg">Your plan has been added to cart.</p>
+  </div>
+</div>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- NAVBAR -->
+<nav id="navbar">
+  <div class="logo">Nexa<span>Grow</span></div>
+  <ul class="nav-links">
+    <li><a href="#services">Services</a></li>
+    <li><a href="#portfolio">Work</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+    <li><a href="#team">Team</a></li>
+    <li><a href="#faq">FAQ</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <div class="nav-right">
+    <div class="cart-nav-btn" onclick="openCart()">
+      🛒 Cart
+      <div class="cart-count hidden" id="cartCount">0</div>
+    </div>
+    <a href="#contact" class="nav-cta">Get Started →</a>
+  </div>
+  <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-content">
+    <div class="hero-badge">🚀 Marketing Agency</div>
+    <h1>We Turn Clicks Into <span class="grad">Customers</span></h1>
+    <p class="hero-sub">Full-stack digital marketing for ambitious brands. From SEO to paid ads, social media to conversion — we grow your business with data-driven precision.</p>
+    <div class="hero-actions">
+      <a href="#contact" class="btn-primary">Get Free Audit →</a>
+      <a href="#portfolio" class="btn-outline">▶ See Our Work</a>
+    </div>
+    <div class="hero-stats">
+      <div><div class="hero-stat-num" data-count="500">0</div><div class="hero-stat-label">Clients Served</div></div>
+      <div><div class="hero-stat-num" data-count="12" data-suffix="M+">0</div><div class="hero-stat-label">Revenue Generated</div></div>
+      <div><div class="hero-stat-num" data-count="98" data-suffix="%">0</div><div class="hero-stat-label">Client Retention</div></div>
+    </div>
+  </div>
+  <div class="hero-visual">
+    <svg viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs><radialGradient id="hg1" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#7c3aed" stop-opacity="0.3"/><stop offset="100%" stop-color="#7c3aed" stop-opacity="0"/></radialGradient></defs>
+      <circle cx="200" cy="200" r="180" fill="url(#hg1)"/>
+      <circle cx="200" cy="200" r="140" stroke="#7c3aed" stroke-opacity="0.2" stroke-width="1" stroke-dasharray="8 4"/>
+      <circle cx="200" cy="200" r="100" stroke="#a855f7" stroke-opacity="0.3" stroke-width="1"/>
+      <rect x="110" y="240" width="30" height="80" rx="6" fill="#7c3aed" opacity="0.6"/>
+      <rect x="150" y="200" width="30" height="120" rx="6" fill="#a855f7" opacity="0.7"/>
+      <rect x="190" y="160" width="30" height="160" rx="6" fill="#a855f7"/>
+      <rect x="230" y="180" width="30" height="140" rx="6" fill="#7c3aed" opacity="0.8"/>
+      <rect x="270" y="130" width="30" height="190" rx="6" fill="#06b6d4"/>
+      <polyline points="80,280 120,240 160,210 200,180 240,160 290,120 340,90" stroke="#06b6d4" stroke-width="3" fill="none" stroke-linecap="round"/>
+      <circle cx="340" cy="90" r="6" fill="#06b6d4"/>
+      <circle cx="200" cy="180" r="5" fill="#a855f7"/>
+      <rect x="30" y="80" width="100" height="40" rx="12" fill="rgba(124,58,237,0.8)"/>
+      <text x="80" y="106" fill="white" font-size="13" font-weight="700" text-anchor="middle" font-family="sans-serif">+340% ROI</text>
+      <rect x="280" y="60" width="90" height="36" rx="12" fill="rgba(6,182,212,0.8)"/>
+      <text x="325" y="83" fill="white" font-size="12" font-weight="700" text-anchor="middle" font-family="sans-serif">SEO #1</text>
+      <rect x="60" y="310" width="110" height="36" rx="12" fill="rgba(245,158,11,0.8)"/>
+      <text x="115" y="333" fill="white" font-size="12" font-weight="700" text-anchor="middle" font-family="sans-serif">10k+ Leads</text>
+    </svg>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-section">
+  <div class="marquee-track">
+    <span class="marquee-item"><span class="marquee-dot"></span>Google Ads</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>Facebook Ads</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>SEO Optimization</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>Content Marketing</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>Instagram Growth</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>TikTok Ads</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>Email Campaigns</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>Brand Strategy</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>Analytics & CRO</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>Influencer Marketing</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>Google Ads</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>Facebook Ads</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>SEO Optimization</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>Content Marketing</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>Instagram Growth</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>TikTok Ads</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>Email Campaigns</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>Brand Strategy</span>
+  </div>
+</div>
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="services-header reveal">
+    <div class="section-tag">What We Do</div>
+    <h2>Services Built for <span style="background:linear-gradient(135deg,#a855f7,#06b6d4);-webkit-background-clip:text;-webkit-text-fill-color:transparent">Real Growth</span></h2>
+    <p class="section-sub">Every service is engineered to deliver measurable ROI. No vanity metrics — just revenue that grows.</p>
+  </div>
+  <div class="services-grid">
+    <div class="service-card featured reveal">
+      <div class="service-icon">🎯</div>
+      <h3>Performance Marketing</h3>
+      <p>Data-driven paid advertising across Google, Meta & TikTok. We manage multi-million dollar ad budgets with surgical precision — targeting the right people at exactly the right moment.</p>
+      <div class="service-tags"><span class="tag">Google Ads</span><span class="tag">Meta Ads</span><span class="tag">TikTok Ads</span><span class="tag">Retargeting</span></div>
+    </div>
+    <div class="service-card reveal reveal-delay-1">
+      <div class="service-icon">🔍</div>
+      <h3>SEO & Content</h3>
+      <p>Own the first page of Google. Our technical SEO, content strategy, and link-building get you ranking for terms that actually convert.</p>
+      <div class="service-tags"><span class="tag">Technical SEO</span><span class="tag">Link Building</span><span class="tag">Blogging</span></div>
+    </div>
+    <div class="service-card reveal reveal-delay-2">
+      <div class="service-icon">📱</div>
+      <h3>Social Media</h3>
+      <p>Build a loyal following that buys. We handle strategy, creation, scheduling, and engagement for all major platforms.</p>
+      <div class="service-tags"><span class="tag">Instagram</span><span class="tag">TikTok</span><span class="tag">Facebook</span></div>
+    </div>
+    <div class="service-card reveal">
+      <div class="service-icon">✉️</div>
+      <h3>Email Marketing</h3>
+      <p>Turn your email list into your most profitable channel. Automated drip sequences, newsletters, and campaigns that convert.</p>
+      <div class="service-tags"><span class="tag">Automation</span><span class="tag">Klaviyo</span><span class="tag">Mailchimp</span></div>
+    </div>
+    <div class="service-card reveal reveal-delay-1">
+      <div class="service-icon">📊</div>
+      <h3>Analytics & CRO</h3>
+      <p>Turn data into decisions. We set up dashboards, analyze funnels, and run A/B tests to squeeze more revenue from every visitor.</p>
+      <div class="service-tags"><span class="tag">GA4</span><span class="tag">Hotjar</span><span class="tag">A/B Testing</span></div>
+    </div>
+    <div class="service-card reveal reveal-delay-2">
+      <div class="service-icon">🤝</div>
+      <h3>Brand & Strategy</h3>
+      <p>Position your brand for market leadership. From messaging to visual identity, we build brands people remember and trust.</p>
+      <div class="service-tags"><span class="tag">Branding</span><span class="tag">Strategy</span><span class="tag">Copy</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section id="process">
+  <div class="reveal" style="text-align:center">
+    <div class="section-tag">How We Work</div>
+    <h2>Our 4-Step <span style="background:linear-gradient(135deg,#a855f7,#06b6d4);-webkit-background-clip:text;-webkit-text-fill-color:transparent">Growth Process</span></h2>
+    <p class="section-sub" style="margin:0 auto">A proven system refined across 100+ campaigns to deliver consistent, scalable growth.</p>
+  </div>
+  <div class="process-grid">
+    <div class="process-step reveal"><div class="step-num">01</div><h3>Deep Audit</h3><p>We dissect your current marketing, competitors, and audience to find the biggest growth levers hiding in plain sight.</p></div>
+    <div class="process-step reveal reveal-delay-1"><div class="step-num">02</div><h3>Growth Blueprint</h3><p>A custom 90-day roadmap with prioritized channels, budgets, KPIs, and a clear path to measurable results.</p></div>
+    <div class="process-step reveal reveal-delay-2"><div class="step-num">03</div><h3>Execute & Test</h3><p>Rapid execution, constant A/B testing, and weekly optimizations to find what works and scale it fast.</p></div>
+    <div class="process-step reveal reveal-delay-3"><div class="step-num">04</div><h3>Scale & Report</h3><p>Double down on what's working, transparent monthly reports, and continuous scaling for compounding growth.</p></div>
+  </div>
+</section>
+
+<!-- RESULTS -->
+<section id="results">
+  <div class="reveal"><div class="section-tag">By The Numbers</div><h2>Results That <span style="background:linear-gradient(135deg,#a855f7,#06b6d4);-webkit-background-clip:text;-webkit-text-fill-color:transparent">Speak Louder</span></h2></div>
+  <div class="metrics-row">
+    <div class="metric-card reveal"><div class="metric-num" data-count="500">0</div><div class="metric-label">Happy Clients</div></div>
+    <div class="metric-card reveal reveal-delay-1"><div class="metric-num" data-count="12" data-suffix="M+">0</div><div class="metric-label">Revenue Generated</div></div>
+    <div class="metric-card reveal reveal-delay-2"><div class="metric-num" data-count="340" data-suffix="%">0</div><div class="metric-label">Average ROI</div></div>
+    <div class="metric-card reveal reveal-delay-3"><div class="metric-num" data-count="98" data-suffix="%">0</div><div class="metric-label">Client Retention</div></div>
+  </div>
+</section>
+
+<!-- PORTFOLIO -->
+<section id="portfolio">
+  <div class="reveal"><div class="section-tag">Our Work</div><h2>Case Studies & <span style="background:linear-gradient(135deg,#a855f7,#06b6d4);-webkit-background-clip:text;-webkit-text-fill-color:transparent">Success Stories</span></h2><p class="section-sub">Real brands, real results. Explore campaigns we're proud to have built.</p></div>
+  <div class="portfolio-filters reveal">
+    <button class="filter-btn active" data-filter="all">All</button>
+    <button class="filter-btn" data-filter="seo">SEO</button>
+    <button class="filter-btn" data-filter="paid">Paid Ads</button>
+    <button class="filter-btn" data-filter="social">Social</button>
+    <button class="filter-btn" data-filter="email">Email</button>
+  </div>
+  <div class="portfolio-grid">
+    <div class="portfolio-card reveal" data-cat="paid"><div class="portfolio-img" style="background:linear-gradient(135deg,#13121e,#1e1a2e)">🛍️<div class="overlay">View Case Study →</div></div><div class="portfolio-info"><div class="portfolio-cat">Paid Ads · E-Commerce</div><h3>Fashion Brand — 5x ROAS</h3><div class="portfolio-result" style="color:#a855f7">📈 PKR 2M revenue in 60 days</div></div></div>
+    <div class="portfolio-card reveal reveal-delay-1" data-cat="seo"><div class="portfolio-img" style="background:linear-gradient(135deg,#0c1a13,#0f2a1a)">🏥<div class="overlay">View Case Study →</div></div><div class="portfolio-info"><div class="portfolio-cat">SEO · Healthcare</div><h3>Medical Clinic — Page 1 Rankings</h3><div class="portfolio-result" style="color:#a855f7">📈 300% organic traffic growth</div></div></div>
+    <div class="portfolio-card reveal reveal-delay-2" data-cat="social"><div class="portfolio-img" style="background:linear-gradient(135deg,#1a0c13,#2a0f1e)">🍕<div class="overlay">View Case Study →</div></div><div class="portfolio-info"><div class="portfolio-cat">Social Media · F&B</div><h3>Restaurant Chain — Viral Growth</h3><div class="portfolio-result" style="color:#a855f7">📈 50k followers in 3 months</div></div></div>
+    <div class="portfolio-card reveal" data-cat="email"><div class="portfolio-img" style="background:linear-gradient(135deg,#0c1320,#0f1a2a)">💼<div class="overlay">View Case Study →</div></div><div class="portfolio-info"><div class="portfolio-cat">Email · B2B SaaS</div><h3>SaaS Startup — Lead Gen</h3><div class="portfolio-result" style="color:#a855f7">📈 42% email open rate</div></div></div>
+    <div class="portfolio-card reveal reveal-delay-1" data-cat="paid"><div class="portfolio-img" style="background:linear-gradient(135deg,#1a130c,#2a1a0f)">🏡<div class="overlay">View Case Study →</div></div><div class="portfolio-info"><div class="portfolio-cat">Paid Ads · Real Estate</div><h3>Property Developer — 200 Leads/mo</h3><div class="portfolio-result" style="color:#a855f7">📈 PKR 500 cost per lead</div></div></div>
+    <div class="portfolio-card reveal reveal-delay-2" data-cat="seo"><div class="portfolio-img" style="background:linear-gradient(135deg,#100c1a,#1a0f2a)">📚<div class="overlay">View Case Study →</div></div><div class="portfolio-info"><div class="portfolio-cat">SEO · Education</div><h3>EdTech Platform — National Rank</h3><div class="portfolio-result" style="color:#a855f7">📈 #1 for 50+ keywords</div></div></div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section id="testimonials">
+  <div class="reveal" style="text-align:center"><div class="section-tag">Client Love</div><h2>What Our Clients <span style="background:linear-gradient(135deg,#a855f7,#06b6d4);-webkit-background-clip:text;-webkit-text-fill-color:transparent">Actually Say</span></h2><p class="section-sub" style="margin:0 auto">Not cherry-picked quotes — consistent feedback from clients who've seen real ROI.</p></div>
+  <div class="testimonials-grid">
+    <div class="testimonial-card reveal"><div class="stars">★★★★★</div><p class="testimonial-text">"NexaGrow transformed our online presence completely. Our Google Ads went from burning cash to generating 5x ROAS consistently. Best marketing investment we've ever made."</p><div class="testimonial-author"><div class="author-avatar">AK</div><div><div class="author-name">Ahmed Khan</div><div class="author-role">CEO, StylePK Fashion</div></div></div></div>
+    <div class="testimonial-card reveal reveal-delay-1"><div class="stars">★★★★★</div><p class="testimonial-text">"Within 90 days they got us ranking #1 for our most competitive keywords. The organic leads we get now have completely changed our business trajectory."</p><div class="testimonial-author"><div class="author-avatar">SF</div><div><div class="author-name">Sara Farooqi</div><div class="author-role">Founder, MediCare Clinic</div></div></div></div>
+    <div class="testimonial-card reveal reveal-delay-2"><div class="stars">★★★★★</div><p class="testimonial-text">"The social media strategy they built for us was brilliant. We went from 2k to 50k followers in 3 months and our restaurant is fully booked every weekend now."</p><div class="testimonial-author"><div class="author-avatar">BM</div><div><div class="author-name">Bilal Mahmood</div><div class="author-role">Owner, Spice Garden Restaurant</div></div></div></div>
+    <div class="testimonial-card reveal"><div class="stars">★★★★★</div><p class="testimonial-text">"Their email marketing automation alone pays for the entire retainer 10x over. The team is incredibly responsive and genuinely cares about our growth."</p><div class="testimonial-author"><div class="author-avatar">ZA</div><div><div class="author-name">Zainab Akhtar</div><div class="author-role">Marketing Head, TechFlow SaaS</div></div></div></div>
+    <div class="testimonial-card reveal reveal-delay-1"><div class="stars">★★★★★</div><p class="testimonial-text">"We were spending PKR 5 lacs/month on ads with minimal results before NexaGrow. Now with the same budget we're generating 4x the leads for our real estate projects."</p><div class="testimonial-author"><div class="author-avatar">MR</div><div><div class="author-name">Murad Raza</div><div class="author-role">Director, Prime Properties</div></div></div></div>
+    <div class="testimonial-card reveal reveal-delay-2"><div class="stars">★★★★★</div><p class="testimonial-text">"What sets them apart is the transparency. Weekly reports, monthly strategy calls, and they're always reachable. They feel like an in-house team, not an agency."</p><div class="testimonial-author"><div class="author-avatar">HS</div><div><div class="author-name">Hina Shah</div><div class="author-role">CEO, LearnFast EdTech</div></div></div></div>
+  </div>
+</section>
+
+<!-- ===================== PRICING ===================== -->
+<section id="pricing">
+  <div class="pricing-header reveal">
+    <div class="section-tag">Transparent Pricing</div>
+    <h2>Plans That <span style="background:linear-gradient(135deg,#a855f7,#06b6d4);-webkit-background-clip:text;-webkit-text-fill-color:transparent">Scale With You</span></h2>
+    <p class="section-sub" style="margin:0 auto">No hidden fees, no lock-in contracts. Cancel anytime. All plans include a free onboarding audit.</p>
+  </div>
+  <div class="pricing-grid">
+
+    <!-- STARTER -->
+    <div class="pricing-card reveal">
+      <div class="plan-name">Starter</div>
+      <div class="plan-price" id="price-starter"><span class="price-symbol">PKR </span><span class="price-amount">49,999</span><span>/mo</span></div>
+      <div class="plan-desc">Perfect for small businesses ready to start growing online.</div>
+      <ul class="plan-features">
+        <li>1 Marketing Channel</li>
+        <li>Google or Meta Ads</li>
+        <li>Monthly Reporting</li>
+        <li>Free Onboarding Audit</li>
+        <li class="no">Custom Strategy</li>
+        <li class="no">CRO & Landing Pages</li>
+        <li class="no">Priority Support</li>
+      </ul>
+      <button class="add-to-cart-btn outline-cart" onclick="addToCart('starter')" id="btn-starter">
+        🛒 Add to Cart
+      </button>
+    </div>
+
+    <!-- GROWTH (POPULAR) -->
+    <div class="pricing-card popular reveal reveal-delay-1">
+      <div class="popular-badge">⭐ Most Popular</div>
+      <div class="plan-name">Growth</div>
+      <div class="plan-price" id="price-growth"><span class="price-symbol">PKR </span><span class="price-amount">99,999</span><span>/mo</span></div>
+      <div class="plan-desc">For scaling businesses that want aggressive, multi-channel growth.</div>
+      <ul class="plan-features">
+        <li>3 Marketing Channels</li>
+        <li>Google + Meta + SEO</li>
+        <li>Weekly Reporting</li>
+        <li>Dedicated Account Manager</li>
+        <li>Free Onboarding Audit</li>
+        <li>Custom Strategy</li>
+        <li>CRO & Landing Pages</li>
+        <li class="no">Priority Support</li>
+      </ul>
+      <button class="add-to-cart-btn primary-cart" onclick="addToCart('growth')" id="btn-growth">
+        🛒 Add to Cart
+      </button>
+    </div>
+
+    <!-- ENTERPRISE -->
+    <div class="pricing-card reveal reveal-delay-2">
+      <div class="plan-name">Enterprise</div>
+      <div class="plan-price" id="price-enterprise"><span class="price-symbol">PKR </span><span class="price-amount">Custom</span></div>
+      <div class="plan-desc">Full-service marketing for established brands with big ambitions.</div>
+      <ul class="plan-features">
+        <li>All Channels</li>
+        <li>Full Funnel Strategy</li>
+        <li>Daily Reporting</li>
+        <li>Dedicated Senior Team</li>
+        <li>Free Quarterly Audits</li>
+        <li>Custom Strategy</li>
+        <li>Full CRO Suite</li>
+        <li>24/7 Priority Support</li>
+      </ul>
+      <button class="add-to-cart-btn outline-cart" onclick="addToCart('enterprise')" id="btn-enterprise">
+        🛒 Add to Cart
+      </button>
+    </div>
+
+  </div>
+</section>
+
+<!-- TEAM -->
+<section id="team">
+  <div class="reveal" style="text-align:center"><div class="section-tag">Meet The Team</div><h2>The Humans Behind <span style="background:linear-gradient(135deg,#a855f7,#06b6d4);-webkit-background-clip:text;-webkit-text-fill-color:transparent">Your Growth</span></h2></div>
+  <div class="team-grid">
+    <div class="team-card reveal"><div class="team-avatar">👨‍💼</div><h3>Aamash Aziz</h3><div class="team-role">Founder & CEO</div><p>4+ years running campaigns for brands across Pakistan and the GCC.</p><div class="team-social"><div class="social-btn">in</div><div class="social-btn">tw</div></div></div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq">
+  <div class="faq-layout">
+    <div class="reveal"><div class="section-tag">FAQ</div><h2>Your Questions, <span style="background:linear-gradient(135deg,#a855f7,#06b6d4);-webkit-background-clip:text;-webkit-text-fill-color:transparent">Answered</span></h2><p class="section-sub">Still have questions? <a href="#contact" style="color:var(--accent2)">Let's talk.</a></p></div>
+    <div class="faq-list reveal reveal-delay-1">
+      <div class="faq-item open"><div class="faq-q">How soon will I see results? <div class="faq-toggle">+</div></div><div class="faq-a">Paid ads typically show measurable results within 2–4 weeks. SEO takes 3–6 months to see significant organic traffic growth. We set clear, realistic expectations from day one and share transparent weekly updates.</div></div>
+      <div class="faq-item"><div class="faq-q">Do I need a big budget to start? <div class="faq-toggle">+</div></div><div class="faq-a">Not at all. Our Starter plan is designed for businesses beginning their digital marketing journey. We'll recommend a realistic ad budget based on your goals, industry, and competition — no inflated minimums.</div></div>
+      <div class="faq-item"><div class="faq-q">Do you lock clients into long contracts? <div class="faq-toggle">+</div></div><div class="faq-a">We operate on monthly rolling contracts. You can cancel with 30 days notice. We prefer to keep clients through results, not contracts. Most clients have stayed with us for 2+ years by choice.</div></div>
+      <div class="faq-item"><div class="faq-q">What industries do you work with? <div class="faq-toggle">+</div></div><div class="faq-a">We've worked with e-commerce, real estate, healthcare, education, hospitality, SaaS, and professional services. Our team adapts strategies to your specific industry's competitive landscape and customer journey.</div></div>
+      <div class="faq-item"><div class="faq-q">How do you measure and report success? <div class="faq-toggle">+</div></div><div class="faq-a">You get a dedicated dashboard with real-time performance data, weekly email summaries, and monthly strategy calls. We track ROAS, CPA, organic traffic, leads, and revenue — the metrics that actually matter to your business.</div></div>
+      <div class="faq-item"><div class="faq-q">What makes NexaGrow different? <div class="faq-toggle">+</div></div><div class="faq-a">We're a team of practitioners, not account managers. Every strategist at NexaGrow has personally managed campaigns, written copy, and optimized funnels. Combined with our proprietary analytics framework and no-fluff communication, clients consistently describe us as the best agency they've ever worked with.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section id="cta">
+  <div class="cta-box reveal">
+    <div class="section-tag">Ready to Grow?</div>
+    <h2>Let's Build Something <span style="background:linear-gradient(135deg,#a855f7,#06b6d4);-webkit-background-clip:text;-webkit-text-fill-color:transparent">Extraordinary</span> Together</h2>
+    <p>Get your free marketing audit worth PKR 25,000. No commitment required — just actionable insights you can use immediately.</p>
+    <div class="cta-actions">
+      <a href="#pricing" class="btn-primary" style="font-size:1.1rem;padding:1rem 2.5rem">View Plans & Pricing →</a>
+      <a href="tel:+923124993886" class="btn-outline" style="font-size:1.1rem;padding:1rem 2.5rem">📞 Call Us Now</a>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="contact-layout">
+    <div class="reveal">
+      <div class="section-tag">Get In Touch</div>
+      <h2>Start Your <span style="background:linear-gradient(135deg,#a855f7,#06b6d4);-webkit-background-clip:text;-webkit-text-fill-color:transparent">Growth Journey</span></h2>
+      <p class="section-sub" style="margin-bottom:3rem">Fill out the form and we'll get back to you within 24 hours with a personalized growth strategy overview.</p>
+      <div class="contact-info">
+        <div class="contact-detail"><div class="contact-icon">📍</div><div class="contact-detail-text"><h4>Our Office</h4><p>Multan, Pakistan</p></div></div>
+        <div class="contact-detail"><div class="contact-icon">📞</div><div class="contact-detail-text"><h4>Phone / WhatsApp</h4><p>+92 312 4993886</p></div></div>
+        <div class="contact-detail"><div class="contact-icon">✉️</div><div class="contact-detail-text"><h4>Email</h4><p>boostramarketingofficial@gmail.com</p></div></div>
+      </div>
+    </div>
+    <div class="reveal reveal-delay-1">
+      <form class="contact-form" id="contactForm" onsubmit="handleSubmit(event)" novalidate>
+        <div class="form-row">
+          <div class="form-group"><label>First Name *</label><input type="text" placeholder="Ahmed" required></div>
+          <div class="form-group"><label>Last Name *</label><input type="text" placeholder="Khan" required></div>
+        </div>
+        <div class="form-group"><label>Email Address *</label><input type="email" placeholder="ahmed@company.com" required></div>
+        <div class="form-group"><label>Phone / WhatsApp</label><input type="tel" placeholder="+92 300 0000000"></div>
+        <div class="form-group"><label>Company / Brand Name *</label><input type="text" placeholder="Your Company" required></div>
+        <div class="form-group"><label>Service Interested In</label>
+          <select><option value="">Select a service...</option><option>Performance Marketing (Paid Ads)</option><option>SEO & Content Marketing</option><option>Social Media Management</option><option>Email Marketing</option><option>Analytics & CRO</option><option>Brand Strategy</option><option>Full-Service Package</option></select>
+        </div>
+        <div class="form-group"><label>Monthly Marketing Budget</label><select id="budgetSelect"><option value="">Select budget range...</option></select></div>
+        <div class="form-group"><label>Tell Us About Your Goals</label><textarea placeholder="What are your main marketing challenges? What does success look like for you in 6 months?"></textarea></div>
+        <button type="submit" class="btn-primary" style="width:100%;justify-content:center;padding:1rem">Send Message & Get Free Audit →</button>
+      </form>
+      <div id="formSuccess" style="display:none;text-align:center;padding:3rem;background:rgba(124,58,237,0.1);border:1px solid rgba(124,58,237,0.3);border-radius:20px;margin-top:1rem">
+        <div style="font-size:3rem;margin-bottom:1rem">🎉</div>
+        <h3 style="font-family:'Syne',sans-serif;margin-bottom:0.5rem">Message Received!</h3>
+        <p style="color:var(--muted)">We'll reach out within 24 hours with your personalized growth strategy. Check your email!</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <div class="logo" style="font-size:1.8rem">Nexa<span style="color:var(--gold);-webkit-text-fill-color:var(--gold)">Grow</span></div>
+      <p>Pakistan's leading digital marketing agency. We grow ambitious brands with data, creativity, and relentless execution.</p>
+      <div class="footer-social">
+        <div class="social-btn" style="border-radius:10px">fb</div>
+        <div class="social-btn" style="border-radius:10px">ig</div>
+        <div class="social-btn" style="border-radius:10px">in</div>
+        <div class="social-btn" style="border-radius:10px">tw</div>
+        <div class="social-btn" style="border-radius:10px">yt</div>
+      </div>
+    </div>
+    <div class="footer-col"><h4>Services</h4><ul><li><a href="#services">Performance Marketing</a></li><li><a href="#services">SEO & Content</a></li><li><a href="#services">Social Media</a></li><li><a href="#services">Email Marketing</a></li><li><a href="#services">Analytics & CRO</a></li><li><a href="#services">Brand Strategy</a></li></ul></div>
+    <div class="footer-col"><h4>Company</h4><ul><li><a href="#team">About Us</a></li><li><a href="#portfolio">Our Work</a></li><li><a href="#testimonials">Reviews</a></li><li><a href="#pricing">Pricing</a></li><li><a href="#">Blog</a></li><li><a href="#contact">Contact</a></li></ul></div>
+    <div class="footer-col">
+      <h4>Get Free Resources</h4>
+      <p style="font-size:0.85rem;color:var(--muted);line-height:1.6;margin-bottom:1rem">Join 2,000+ marketers. Get weekly tips, case studies & growth hacks.</p>
+      <div style="display:flex;gap:8px"><input type="email" placeholder="Your email" style="flex:1;padding:0.6rem 0.8rem;font-size:0.85rem;border-radius:10px"><button style="background:var(--accent);border:none;color:white;border-radius:10px;padding:0 1rem;cursor:pointer;font-weight:600;white-space:nowrap">→</button></div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div>© 2024 NexaGrow. All rights reserved. Made with ❤️ in Pakistan.</div>
+    <div style="display:flex;gap:1.5rem"><a href="#">Privacy Policy</a><a href="#">Terms of Service</a><a href="#">Cookie Policy</a></div>
+  </div>
+</footer>
+
+<div class="back-to-top" id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</div>
+
+<div class="chat-widget">
+  <div class="chat-btn" id="chatBtn" onclick="toggleChat()">💬</div>
+  <div class="chat-popup" id="chatPopup">
+    <h4>👋 Hey there!</h4>
+    <p>Ready to grow your business? Ask us anything or book a free call!</p>
+    <div class="chat-input-row"><input type="text" placeholder="Type a message..." id="chatInput"><button class="chat-send" onclick="sendChat()">→</button></div>
+  </div>
+</div>
+
+<!-- ===================== CART DRAWER ===================== -->
+<div class="cart-overlay" id="cartOverlay" onclick="closeCart()"></div>
+<div class="cart-drawer" id="cartDrawer">
+  <div class="cart-drawer-header">
+    <h3>🛒 Your Cart <span style="color:var(--muted);font-weight:400;font-size:0.85rem" id="cartItemLabel"></span></h3>
+    <button class="cart-close-btn" onclick="closeCart()">×</button>
+  </div>
+  <div class="cart-body" id="cartBody">
+    <div class="cart-empty" id="cartEmpty">
+      <div class="cart-empty-icon">🛒</div>
+      <p>Your cart is empty.<br>Select a plan above to get started.</p>
+    </div>
+    <div id="cartItems"></div>
+  </div>
+  <div class="cart-footer" id="cartFooter" style="display:none">
+    <div class="cart-total-row">
+      <div class="cart-total-label">Monthly Total</div>
+      <div class="cart-total-amount" id="cartTotal">PKR 0</div>
+    </div>
+    <div class="cart-period-note">Billed monthly · Cancel anytime</div>
+    <button class="checkout-btn" onclick="openPayment()">
+      🔒 Proceed to Checkout
+    </button>
+    <div class="cart-security-note">🔒 Secure checkout · 256-bit SSL encryption</div>
+  </div>
+</div>
+
+<!-- ===================== PAYMENT MODAL ===================== -->
+<div class="payment-overlay" id="paymentOverlay">
+  <div class="payment-modal" id="paymentModal">
+
+    <!-- STEP 1: Review & Contact -->
+    <div id="payStep1">
+      <div class="payment-modal-header">
+        <h3>🔒 Secure Checkout</h3>
+        <button class="payment-close" onclick="closePayment()">×</button>
+      </div>
+      <div class="payment-body">
+        <!-- Step indicator -->
+        <div class="payment-steps">
+          <div class="payment-step-item"><div class="step-circle active" id="sc1">1</div><div class="step-label">Review</div></div>
+          <div class="step-line" id="sl1"></div>
+          <div class="payment-step-item"><div class="step-circle" id="sc2">2</div><div class="step-label">Payment</div></div>
+          <div class="step-line" id="sl2"></div>
+          <div class="payment-step-item"><div class="step-circle" id="sc3">✓</div><div class="step-label">Confirm</div></div>
+        </div>
+
+        <!-- Order summary -->
+        <div class="order-summary">
+          <h4>📋 Order Summary</h4>
+          <div id="payOrderLines"></div>
+          <div class="order-line total">
+            <span class="order-key">Monthly Total</span>
+            <span class="order-val order-val" id="payTotal" style="color:var(--accent2);font-family:'Syne',sans-serif;font-size:1.2rem">PKR 0</span>
+          </div>
+        </div>
+
+        <!-- Contact info -->
+        <div class="payment-section-title">👤 Your Information</div>
+        <div class="payment-form-grid">
+          <div class="pf-group"><label>Full Name *</label><input class="pf-input" id="payName" placeholder="Ahmed Khan" required></div>
+          <div class="pf-group"><label>Email Address *</label><input class="pf-input" id="payEmail" type="email" placeholder="ahmed@company.com" required></div>
+          <div class="pf-group"><label>Phone / WhatsApp *</label><input class="pf-input" id="payPhone" placeholder="+92 300 0000000" required></div>
+          <div class="pf-group"><label>Company / Brand Name *</label><input class="pf-input" id="payCompany" placeholder="Your Company"></div>
+        </div>
+
+        <button class="pay-now-btn" onclick="goToPayStep2()">Continue to Payment →</button>
+        <div class="payment-security">🔒 Your information is safe &amp; encrypted</div>
+      </div>
+    </div>
+
+    <!-- STEP 2: Payment Method -->
+    <div id="payStep2" style="display:none">
+      <div class="payment-modal-header">
+        <h3>💳 Payment Details</h3>
+        <button class="payment-close" onclick="closePayment()">×</button>
+      </div>
+      <div class="payment-body">
+        <div class="payment-steps">
+          <div class="payment-step-item"><div class="step-circle done" id="sc1b">✓</div><div class="step-label">Review</div></div>
+          <div class="step-line active"></div>
+          <div class="payment-step-item"><div class="step-circle active">2</div><div class="step-label">Payment</div></div>
+          <div class="step-line"></div>
+          <div class="payment-step-item"><div class="step-circle">✓</div><div class="step-label">Confirm</div></div>
+        </div>
+
+        <div class="order-summary" style="margin-bottom:1.5rem">
+          <div class="order-line total" style="border:none;padding:0;margin:0">
+            <span class="order-key" style="font-size:0.9rem">Charging</span>
+            <span id="payTotalSmall" style="color:var(--accent2);font-family:'Syne',sans-serif;font-weight:800;font-size:1.1rem">PKR 0/mo</span>
+          </div>
+        </div>
+
+        <!-- Payment method tabs -->
+        <div class="payment-section-title">💰 Payment Method</div>
+        <div class="pay-methods">
+          <button class="pay-method-tab active" onclick="selectPayMethod('card',this)"><div class="pm-icon">💳</div>Card</button>
+          <button class="pay-method-tab" onclick="selectPayMethod('jazzcash',this)"><div class="pm-icon">📱</div>JazzCash</button>
+          <button class="pay-method-tab" onclick="selectPayMethod('easypaisa',this)"><div class="pm-icon">💚</div>Easypaisa</button>
+          <button class="pay-method-tab" onclick="selectPayMethod('bank',this)"><div class="pm-icon">🏦</div>Bank</button>
+        </div>
+
+        <!-- CARD PANEL -->
+        <div class="payment-panel active" id="panel-card">
+          <div class="card-visual">
+            <div class="card-chip">💳</div>
+            <div class="card-number-display" id="cardNumDisplay">•••• •••• •••• ••••</div>
+            <div class="card-bottom">
+              <div class="card-holder-display"><div class="cl">Card Holder</div><div class="cv" id="cardNameDisplay">YOUR NAME</div></div>
+              <div class="card-network">VISA</div>
+            </div>
+          </div>
+          <div class="payment-form-grid">
+            <div class="pf-group" style="grid-column:1/-1"><label>Card Number *</label><input class="pf-input" id="cardNum" placeholder="1234 5678 9012 3456" maxlength="19" oninput="formatCard(this)"></div>
+            <div class="pf-group" style="grid-column:1/-1"><label>Cardholder Name *</label><input class="pf-input" id="cardName" placeholder="Ahmed Khan" oninput="document.getElementById('cardNameDisplay').textContent=this.value||'YOUR NAME'"></div>
+          </div>
+          <div class="payment-form-grid two-col">
+            <div class="pf-group"><label>Expiry Date *</label><input class="pf-input" id="cardExp" placeholder="MM / YY" maxlength="7" oninput="formatExpiry(this)"></div>
+            <div class="pf-group"><label>CVV *</label><input class="pf-input" id="cardCvv" placeholder="•••" maxlength="3" type="password"></div>
+          </div>
+        </div>
+
+        <!-- JAZZCASH PANEL -->
+        <div class="payment-panel" id="panel-jazzcash">
+          <div style="background:linear-gradient(135deg,rgba(255,59,48,0.1),rgba(255,149,0,0.05));border:1px solid rgba(255,59,48,0.2);border-radius:14px;padding:1.2rem;margin-bottom:1rem;text-align:center">
+            <div style="font-size:2rem;margin-bottom:0.5rem">📱</div>
+            <div style="font-weight:700;font-size:1rem;margin-bottom:0.3rem">JazzCash Mobile Wallet</div>
+            <div style="font-size:0.82rem;color:var(--muted)">Enter your JazzCash registered mobile number</div>
+          </div>
+          <div class="pf-group"><label>JazzCash Mobile Number *</label><input class="pf-input" id="jazzNum" placeholder="03XX-XXXXXXX"></div>
+          <div class="pf-group" style="margin-top:0.8rem"><label>JazzCash MPIN *</label><input class="pf-input" id="jazzPin" placeholder="Enter 4-digit MPIN" maxlength="4" type="password"></div>
+        </div>
+
+        <!-- EASYPAISA PANEL -->
+        <div class="payment-panel" id="panel-easypaisa">
+          <div style="background:linear-gradient(135deg,rgba(0,168,89,0.1),rgba(0,200,100,0.05));border:1px solid rgba(0,168,89,0.2);border-radius:14px;padding:1.2rem;margin-bottom:1rem;text-align:center">
+            <div style="font-size:2rem;margin-bottom:0.5rem">💚</div>
+            <div style="font-weight:700;font-size:1rem;margin-bottom:0.3rem">Easypaisa Wallet</div>
+            <div style="font-size:0.82rem;color:var(--muted)">Enter your Easypaisa registered number</div>
+          </div>
+          <div class="pf-group"><label>Easypaisa Mobile Number *</label><input class="pf-input" id="epNum" placeholder="03XX-XXXXXXX"></div>
+          <div class="pf-group" style="margin-top:0.8rem"><label>Easypaisa PIN *</label><input class="pf-input" id="epPin" placeholder="Enter 4-digit PIN" maxlength="4" type="password"></div>
+        </div>
+
+        <!-- BANK PANEL -->
+        <div class="payment-panel" id="panel-bank">
+          <div style="background:linear-gradient(135deg,rgba(6,182,212,0.08),rgba(124,58,237,0.05));border:1px solid rgba(6,182,212,0.2);border-radius:14px;padding:1.4rem;margin-bottom:1rem">
+            <div style="font-size:0.8rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;font-weight:700;margin-bottom:0.8rem">Bank Transfer Details</div>
+            <div style="display:grid;gap:0.5rem;font-size:0.88rem">
+              <div style="display:flex;justify-content:space-between"><span style="color:var(--muted)">Bank Name</span><span style="font-weight:600">HBL Bank</span></div>
+              <div style="display:flex;justify-content:space-between"><span style="color:var(--muted)">Account Title</span><span style="font-weight:600">NexaGrow Marketing</span></div>
+              <div style="display:flex;justify-content:space-between"><span style="color:var(--muted)">Account #</span><span style="font-weight:600;color:var(--accent2)">0123-4567890-001</span></div>
+              <div style="display:flex;justify-content:space-between"><span style="color:var(--muted)">IBAN</span><span style="font-weight:600;font-size:0.8rem">PK12HBL0000000012345678</span></div>
+            </div>
+          </div>
+          <div class="pf-group"><label>Transaction Reference / Screenshot</label><input class="pf-input" id="bankRef" placeholder="Enter transaction reference number"></div>
+          <div style="font-size:0.78rem;color:var(--muted);margin-top:0.5rem">📧 Send screenshot to boostramarketingofficial@gmail.com</div>
+        </div>
+
+        <div style="display:flex;gap:0.8rem;margin-top:1.5rem">
+          <button class="btn-outline" onclick="goBackToStep1()" style="flex:0 0 auto;padding:0.85rem 1.2rem;border-radius:14px;font-size:0.9rem">← Back</button>
+          <button class="pay-now-btn" style="flex:1" onclick="processPayment()" id="payNowBtn">
+            🔒 Pay Now &amp; Start Growing
+          </button>
+        </div>
+        <div class="payment-security">🔒 256-bit SSL · Secured by NexaGrow</div>
+      </div>
+    </div>
+
+    <!-- STEP 3: Success -->
+    <div id="payStep3" style="display:none">
+      <div class="payment-modal-header">
+        <h3>✅ Order Confirmed!</h3>
+        <button class="payment-close" onclick="closePayment()">×</button>
+      </div>
+      <div class="payment-body">
+        <div class="payment-success">
+          <div class="success-icon">🎉</div>
+          <h3>Payment Successful!</h3>
+          <p>Your NexaGrow plan is now active. Our team will reach out within 24 hours to kick off your onboarding.</p>
+          <div class="order-ref" id="orderRef">Order #NG-000000</div>
+          <p style="font-size:0.82rem;color:var(--muted);margin-bottom:1.5rem">A confirmation email has been sent to <strong id="confirmEmail" style="color:var(--text)">your email</strong></p>
+          <div class="success-actions">
+            <a href="https://wa.me/923124993886" target="_blank" class="btn-primary" style="font-size:0.9rem;padding:0.75rem 1.5rem">💬 WhatsApp Us</a>
+            <button class="btn-outline" onclick="closePayment();clearCart();" style="font-size:0.9rem;padding:0.75rem 1.5rem;border-radius:100px">Back to Home</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// ============================================================
+// EMAILJS INIT
+// ============================================================
+(function(){ emailjs.init("fcmjSKOB55779CxdT"); })();
+
+// ============================================================
+// CURRENCY / COUNTRY CONFIG
+// ============================================================
+const CURRENCIES = {
+  PK: { symbol:"PKR", label:"PKR ₨", flag:"🇵🇰", starter:"49,999", growth:"99,999", enterprise:"Custom", starterNum:49999, growthNum:99999, enterpriseNum:0, budgets:["Under PKR 50,000","PKR 50,000 – 1,00,000","PKR 1,00,000 – 3,00,000","PKR 3,00,000+"] },
+  US: { symbol:"$",   label:"USD $",  flag:"🇺🇸", starter:"175",    growth:"350",    enterprise:"Custom", starterNum:175, growthNum:350, enterpriseNum:0, budgets:["Under $500","$500 – $2,000","$2,000 – $5,000","$5,000+"] },
+  GB: { symbol:"£",   label:"GBP £",  flag:"🇬🇧", starter:"140",    growth:"280",    enterprise:"Custom", starterNum:140, growthNum:280, enterpriseNum:0, budgets:["Under £400","£400 – £1,500","£1,500 – £4,000","£4,000+"] },
+  AE: { symbol:"AED", label:"AED د.إ",flag:"🇦🇪", starter:"650",    growth:"1,300",  enterprise:"Custom", starterNum:650, growthNum:1300, enterpriseNum:0, budgets:["Under AED 2,000","AED 2,000 – 5,000","AED 5,000 – 15,000","AED 15,000+"] },
+  SA: { symbol:"SAR", label:"SAR ﷼",  flag:"🇸🇦", starter:"660",    growth:"1,320",  enterprise:"Custom", starterNum:660, growthNum:1320, enterpriseNum:0, budgets:["Under SAR 2,000","SAR 2,000 – 5,000","SAR 5,000 – 15,000","SAR 15,000+"] },
+  IN: { symbol:"₹",   label:"INR ₹",  flag:"🇮🇳", starter:"14,999", growth:"29,999", enterprise:"Custom", starterNum:14999, growthNum:29999, enterpriseNum:0, budgets:["Under ₹15,000","₹15,000 – 50,000","₹50,000 – 1,50,000","₹1,50,000+"] },
+  CA: { symbol:"C$",  label:"CAD C$", flag:"🇨🇦", starter:"240",    growth:"480",    enterprise:"Custom", starterNum:240, growthNum:480, enterpriseNum:0, budgets:["Under C$500","C$500 – $2,000","C$2,000 – $5,000","C$5,000+"] },
+  AU: { symbol:"A$",  label:"AUD A$", flag:"🇦🇺", starter:"270",    growth:"540",    enterprise:"Custom", starterNum:270, growthNum:540, enterpriseNum:0, budgets:["Under A$500","A$500 – $2,000","A$2,000 – $6,000","A$6,000+"] },
+  DE: { symbol:"€",   label:"EUR €",  flag:"🇩🇪", starter:"165",    growth:"330",    enterprise:"Custom", starterNum:165, growthNum:330, enterpriseNum:0, budgets:["Under €500","€500 – €1,500","€1,500 – €4,000","€4,000+"] },
+  FR: { symbol:"€",   label:"EUR €",  flag:"🇫🇷", starter:"165",    growth:"330",    enterprise:"Custom", starterNum:165, growthNum:330, enterpriseNum:0, budgets:["Under €500","€500 – €1,500","€1,500 – €4,000","€4,000+"] },
+};
+
+let currentCountry = 'PK';
+
+function changeCurrency(country) {
+  currentCountry = country;
+  const c = CURRENCIES[country] || CURRENCIES.PK;
+  document.getElementById('currencyBadge').textContent = c.label;
+  document.querySelectorAll('.price-symbol').forEach(el => el.textContent = c.symbol + " ");
+  const starter = document.querySelector('#price-starter .price-amount');
+  const growth  = document.querySelector('#price-growth .price-amount');
+  if (starter) starter.textContent = c.starter;
+  if (growth)  growth.textContent  = c.growth;
+  const budgetSel = document.getElementById('budgetSelect');
+  if (budgetSel) {
+    budgetSel.innerHTML = '<option value="">Select budget range...</option>';
+    c.budgets.forEach(b => { const opt = document.createElement('option'); opt.textContent = b; budgetSel.appendChild(opt); });
+  }
+  document.getElementById('countryGreeting').textContent = c.flag + " Viewing prices in " + c.label;
+  localStorage.setItem('nexagrow_country', country);
+  updateCartUI();
+}
+
+function initCountry() {
+  document.body.classList.add('has-countrybar');
+  const saved = localStorage.getItem('nexagrow_country') || 'PK';
+  document.getElementById('countrySelect').value = saved;
+  changeCurrency(saved);
+}
+
+// ============================================================
+// CART STATE
+// ============================================================
+let cart = []; // max 1 plan at a time (replace on add)
+
+const PLAN_INFO = {
+  starter:    { name:"Starter Plan",    emoji:"🚀", features:"1 Channel · Google or Meta Ads · Monthly Reporting" },
+  growth:     { name:"Growth Plan",     emoji:"📈", features:"3 Channels · Google + Meta + SEO · Dedicated AM" },
+  enterprise: { name:"Enterprise Plan", emoji:"🏆", features:"All Channels · Full Funnel · Senior Team · 24/7 Support" },
+};
+
+function getPlanPrice(planId) {
+  const c = CURRENCIES[currentCountry] || CURRENCIES.PK;
+  const sym = c.symbol;
+  if (planId === 'starter') return { display: sym + " " + c.starter + "/mo", num: c.starterNum, sym };
+  if (planId === 'growth')  return { display: sym + " " + c.growth + "/mo",  num: c.growthNum,  sym };
+  return { display: "Custom", num: 0, sym }; // enterprise
+}
+
+function addToCart(planId) {
+  const info  = PLAN_INFO[planId];
+  const price = getPlanPrice(planId);
+
+  // Replace existing item (only 1 plan at a time)
+  cart = [{ id: planId, ...info, price }];
+
+  updateCartUI();
+  updateCartButtons(planId);
+
+  showToast('✅', info.name + ' Added!', 'Click the cart icon to review & checkout.', 'rgba(168,85,247,0.6)');
+  setTimeout(() => openCart(), 400);
+}
+
+function removeFromCart(planId) {
+  cart = cart.filter(i => i.id !== planId);
+  updateCartUI();
+  resetCartButtons();
+}
+
+function clearCart() {
+  cart = [];
+  updateCartUI();
+  resetCartButtons();
+}
+
+function updateCartButtons(activePlanId) {
+  ['starter','growth','enterprise'].forEach(id => {
+    const btn = document.getElementById('btn-' + id);
+    if (!btn) return;
+    if (id === activePlanId) {
+      btn.textContent = '✓ Added to Cart';
+      btn.classList.add('added');
+    } else {
+      btn.textContent = '🛒 Add to Cart';
+      btn.classList.remove('added');
+      btn.classList.remove('primary-cart');
+      btn.classList.add('outline-cart');
+    }
+  });
+  // restore popular button style
+  const growthBtn = document.getElementById('btn-growth');
+  if (growthBtn && !growthBtn.classList.contains('added')) {
+    growthBtn.classList.add('primary-cart');
+    growthBtn.classList.remove('outline-cart');
+  }
+}
+
+function resetCartButtons() {
+  ['starter','enterprise'].forEach(id => {
+    const btn = document.getElementById('btn-' + id);
+    if (btn) { btn.textContent = '🛒 Add to Cart'; btn.classList.remove('added'); }
+  });
+  const gBtn = document.getElementById('btn-growth');
+  if (gBtn) { gBtn.textContent = '🛒 Add to Cart'; gBtn.classList.remove('added'); gBtn.classList.add('primary-cart'); gBtn.classList.remove('outline-cart'); }
+}
+
+function updateCartUI() {
+  const count = cart.length;
+  const countEl = document.getElementById('cartCount');
+  countEl.textContent = count;
+  countEl.classList.toggle('hidden', count === 0);
+  if (count > 0) { countEl.classList.add('pop'); setTimeout(() => countEl.classList.remove('pop'), 400); }
+
+  document.getElementById('cartItemLabel').textContent = count > 0 ? `(${count} item)` : '';
+  document.getElementById('cartEmpty').style.display = count === 0 ? 'block' : 'none';
+  document.getElementById('cartFooter').style.display = count > 0 ? 'block' : 'none';
+
+  const itemsEl = document.getElementById('cartItems');
+  itemsEl.innerHTML = '';
+  let total = 0;
+  cart.forEach(item => {
+    total += item.price.num;
+    itemsEl.innerHTML += `
+      <div class="cart-item">
+        <div class="cart-item-header">
+          <div class="cart-item-name">${item.emoji} ${item.name}</div>
+          <div class="cart-item-price">${item.price.display}</div>
+        </div>
+        <div class="cart-item-desc">${item.features}</div>
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div class="cart-item-badge">📅 Monthly Subscription</div>
+          <button class="cart-item-remove" onclick="removeFromCart('${item.id}')">🗑 Remove</button>
+        </div>
+      </div>`;
+  });
+
+  const c = CURRENCIES[currentCountry] || CURRENCIES.PK;
+  const totalStr = total > 0
+    ? c.symbol + " " + total.toLocaleString() + "/mo"
+    : (cart.length > 0 ? "Custom" : c.symbol + " 0");
+  document.getElementById('cartTotal').textContent = totalStr;
+}
+
+function openCart() {
+  document.getElementById('cartOverlay').classList.add('open');
+  document.getElementById('cartDrawer').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeCart() {
+  document.getElementById('cartOverlay').classList.remove('open');
+  document.getElementById('cartDrawer').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+// ============================================================
+// PAYMENT FLOW
+// ============================================================
+let currentPayMethod = 'card';
+
+function openPayment() {
+  if (cart.length === 0) return;
+  closeCart();
+
+  // populate order lines
+  const linesEl = document.getElementById('payOrderLines');
+  const c = CURRENCIES[currentCountry] || CURRENCIES.PK;
+  let total = 0;
+  linesEl.innerHTML = '';
+  cart.forEach(item => {
+    total += item.price.num;
+    linesEl.innerHTML += `<div class="order-line"><span class="order-key">${item.emoji} ${item.name}</span><span class="order-val">${item.price.display}</span></div>`;
+  });
+  const totalStr = total > 0 ? c.symbol + " " + total.toLocaleString() + "/mo" : "Custom";
+  document.getElementById('payTotal').textContent = totalStr;
+  document.getElementById('payTotalSmall').textContent = totalStr;
+
+  // reset to step 1
+  document.getElementById('payStep1').style.display = 'block';
+  document.getElementById('payStep2').style.display = 'none';
+  document.getElementById('payStep3').style.display = 'none';
+
+  document.getElementById('paymentOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closePayment() {
+  document.getElementById('paymentOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function goToPayStep2() {
+  const name = document.getElementById('payName').value.trim();
+  const email = document.getElementById('payEmail').value.trim();
+  const phone = document.getElementById('payPhone').value.trim();
+  if (!name || !email || !phone) {
+    showToast('⚠️', 'Missing Fields', 'Please fill in your name, email, and phone number.', 'rgba(245,158,11,0.6)');
+    return;
+  }
+  document.getElementById('payStep1').style.display = 'none';
+  document.getElementById('payStep2').style.display = 'block';
+  document.getElementById('paymentModal').scrollTop = 0;
+}
+
+function goBackToStep1() {
+  document.getElementById('payStep2').style.display = 'none';
+  document.getElementById('payStep1').style.display = 'block';
+  document.getElementById('paymentModal').scrollTop = 0;
+}
+
+function selectPayMethod(method, el) {
+  currentPayMethod = method;
+  document.querySelectorAll('.pay-method-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  document.querySelectorAll('.payment-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('panel-' + method).classList.add('active');
+}
+
+function formatCard(input) {
+  let v = input.value.replace(/\D/g,'').substring(0,16);
+  let formatted = v.match(/.{1,4}/g)?.join(' ') || v;
+  input.value = formatted;
+  const display = formatted.padEnd(19,'•').replace(/[0-9]/g,(c,i) => i < formatted.length ? c : '•');
+  document.getElementById('cardNumDisplay').textContent = display || '•••• •••• •••• ••••';
+}
+
+function formatExpiry(input) {
+  let v = input.value.replace(/\D/g,'');
+  if (v.length >= 2) v = v.substring(0,2) + ' / ' + v.substring(2,4);
+  input.value = v;
+}
+
+function processPayment() {
+  const btn = document.getElementById('payNowBtn');
+  const name = document.getElementById('payName').value;
+  const email = document.getElementById('payEmail').value;
+
+  // Basic validation per method
+  if (currentPayMethod === 'card') {
+    const num = document.getElementById('cardNum').value.replace(/\s/g,'');
+    const exp = document.getElementById('cardExp').value;
+    const cvv = document.getElementById('cardCvv').value;
+    if (num.length < 16 || !exp || cvv.length < 3) {
+      showToast('⚠️', 'Invalid Card', 'Please fill in all card details correctly.', 'rgba(245,158,11,0.6)');
+      return;
+    }
+  } else if (currentPayMethod === 'jazzcash') {
+    if (!document.getElementById('jazzNum').value || !document.getElementById('jazzPin').value) {
+      showToast('⚠️', 'Missing Details', 'Please enter your JazzCash number and MPIN.', 'rgba(245,158,11,0.6)');
+      return;
+    }
+  } else if (currentPayMethod === 'easypaisa') {
+    if (!document.getElementById('epNum').value || !document.getElementById('epPin').value) {
+      showToast('⚠️', 'Missing Details', 'Please enter your Easypaisa number and PIN.', 'rgba(245,158,11,0.6)');
+      return;
+    }
+  }
+
+  btn.disabled = true;
+  btn.textContent = '⏳ Processing Payment...';
+
+  // Simulate payment processing
+  setTimeout(() => {
+    const ref = 'NG-' + Date.now().toString().slice(-6);
+    document.getElementById('orderRef').textContent = 'Order #' + ref;
+    document.getElementById('confirmEmail').textContent = email;
+
+    document.getElementById('payStep2').style.display = 'none';
+    document.getElementById('payStep3').style.display = 'block';
+    document.getElementById('paymentModal').scrollTop = 0;
+
+    showToast('🎉', 'Payment Confirmed!', 'Welcome to NexaGrow, ' + name.split(' ')[0] + '! Check your email.', 'rgba(16,185,129,0.7)');
+
+    btn.disabled = false;
+    btn.textContent = '🔒 Pay Now & Start Growing';
+  }, 2200);
+}
+
+// ============================================================
+// TOAST
+// ============================================================
+function showToast(icon, title, msg, color) {
+  const t = document.getElementById('toastNotif');
+  document.getElementById('toastIcon').textContent = icon;
+  document.getElementById('toastTitle').textContent = title;
+  document.getElementById('toastMsg').textContent = msg;
+  t.style.borderColor = color || 'rgba(6,182,212,0.5)';
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 5000);
+}
+
+// ============================================================
+// EMAILJS FORM SUBMIT
+// ============================================================
+function handleSubmit(e) {
+  e.preventDefault();
+  const form = document.getElementById('contactForm');
+  const btn = form.querySelector('button[type=submit]');
+  const origText = btn.textContent;
+  const inputs = form.querySelectorAll('input, textarea, select');
+  const firstName = inputs[0].value, lastName = inputs[1].value;
+  const email = inputs[2].value, phone = inputs[3].value;
+  const company = inputs[4].value;
+  const service = inputs[5].value || 'Not specified';
+  const budget  = inputs[6].value || 'Not specified';
+  const message = inputs[7].value || 'No message provided';
+  const country  = document.getElementById('countrySelect').value;
+  const currency = document.getElementById('currencyBadge').textContent;
+  btn.textContent = '⏳ Sending...'; btn.disabled = true;
+  const SERVICE_ID  = 'service_jgwqohe';
+  const TEMPLATE_ID = 'template_8zb57v8';
+  emailjs.send(SERVICE_ID, TEMPLATE_ID, { from_name: firstName+' '+lastName, from_email: email, phone: phone||'Not provided', company, service, budget, message, country, currency, reply_to: email, to_name: 'NexaGrow Team' })
+    .then(() => { form.style.display='none'; document.getElementById('formSuccess').style.display='block'; showToast('📧','Email Sent!','New lead from '+firstName+' at '+company,'rgba(6,182,212,0.6)'); })
+    .catch(() => { form.style.display='none'; document.getElementById('formSuccess').style.display='block'; showToast('✅','Message Received!','Form submitted.','rgba(245,158,11,0.6)'); })
+    .finally(() => { btn.textContent=origText; btn.disabled=false; });
+}
+
+// ============================================================
+// CURSOR
+// ============================================================
+const cursor = document.getElementById('cursor');
+const cursorRing = document.getElementById('cursorRing');
+let mouseX=0,mouseY=0,ringX=0,ringY=0;
+const isMobile = window.matchMedia('(max-width: 768px)').matches;
+if (isMobile) { cursor.style.display='none'; cursorRing.style.display='none'; document.body.style.cursor='auto'; }
+else {
+  document.addEventListener('mousemove', e => { mouseX=e.clientX; mouseY=e.clientY; cursor.style.left=mouseX+'px'; cursor.style.top=mouseY+'px'; });
+  function animateRing() { ringX+=(mouseX-ringX)*0.12; ringY+=(mouseY-ringY)*0.12; cursorRing.style.left=ringX+'px'; cursorRing.style.top=ringY+'px'; requestAnimationFrame(animateRing); }
+  animateRing();
+  document.querySelectorAll('a,button,.service-card,.portfolio-card,.team-card,.filter-btn,.faq-q').forEach(el => { el.addEventListener('mouseenter',()=>{cursor.classList.add('hovered');cursorRing.classList.add('hovered')}); el.addEventListener('mouseleave',()=>{cursor.classList.remove('hovered');cursorRing.classList.remove('hovered')}); });
+}
+
+// ============================================================
+// NAV SCROLL
+// ============================================================
+window.addEventListener('scroll', () => {
+  document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 50);
+  document.getElementById('backToTop').classList.toggle('visible', window.scrollY > 600);
+});
+
+// ============================================================
+// SCROLL REVEAL
+// ============================================================
+const observer = new IntersectionObserver(entries => { entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); }); }, { threshold:0.08, rootMargin:'0px 0px -50px 0px' });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+// ============================================================
+// COUNT UP
+// ============================================================
+function countUp(el) {
+  const target=+el.dataset.count, suffix=el.dataset.suffix||'+', step=target/(2000/16); let current=0;
+  const timer=setInterval(()=>{ current=Math.min(current+step,target); el.textContent=Math.floor(current)+suffix; if(current>=target)clearInterval(timer); },16);
+}
+const countObserver=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){countUp(e.target);countObserver.unobserve(e.target);}});},{threshold:0.5});
+document.querySelectorAll('[data-count]').forEach(el=>countObserver.observe(el));
+
+// ============================================================
+// FAQ
+// ============================================================
+document.querySelectorAll('.faq-q').forEach(q => {
+  q.addEventListener('click', () => { const item=q.parentElement; const wasOpen=item.classList.contains('open'); document.querySelectorAll('.faq-item').forEach(i=>i.classList.remove('open')); if(!wasOpen) item.classList.add('open'); });
+});
+
+// ============================================================
+// PORTFOLIO FILTER
+// ============================================================
+document.querySelectorAll('.filter-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active')); btn.classList.add('active');
+    const filter=btn.dataset.filter;
+    document.querySelectorAll('.portfolio-card').forEach(card => { card.style.display=(filter==='all'||card.dataset.cat===filter)?'block':'none'; });
+  });
+});
+
+// ============================================================
+// CHAT WIDGET
+// ============================================================
+function toggleChat() { document.getElementById('chatPopup').classList.toggle('open'); }
+function sendChat() { const input=document.getElementById('chatInput'); if(input.value.trim()){ input.value=''; setTimeout(()=>{ document.getElementById('chatPopup').querySelector('p').textContent="Thanks! We'll respond via WhatsApp shortly. Or call +92 312 4993886 for immediate help!"; },300); } }
+
+// ============================================================
+// SMOOTH SCROLL
+// ============================================================
+document.querySelectorAll('a[href^="#"]').forEach(a => { a.addEventListener('click', e => { const target=document.querySelector(a.getAttribute('href')); if(target){e.preventDefault();target.scrollIntoView({behavior:'smooth',block:'start'});} }); });
+
+// ============================================================
+// HAMBURGER
+// ============================================================
+document.getElementById('hamburger').addEventListener('click', () => {
+  const links=document.querySelector('.nav-links'); const isOpen=links.style.display==='flex';
+  if(isOpen){links.style.display='none';}else{links.style.cssText='display:flex;flex-direction:column;position:fixed;top:74px;left:0;right:0;background:rgba(5,4,10,0.98);padding:1.5rem 5%;gap:1.2rem;border-bottom:1px solid rgba(124,58,237,0.2);z-index:999;backdrop-filter:blur(20px)';}
+});
+
+// ============================================================
+// ESC key to close modals
+// ============================================================
+document.addEventListener('keydown', e => { if(e.key==='Escape'){ closeCart(); closePayment(); } });
+
+// ============================================================
+// INIT
+// ============================================================
+document.addEventListener('DOMContentLoaded', () => { initCountry(); });
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

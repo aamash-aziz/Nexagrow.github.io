@@ -1503,7 +1503,7 @@ function handleSubmit(e) {
   const country  = document.getElementById('countrySelect').value;
   const currency = document.getElementById('currencyBadge').textContent;
   btn.textContent = '⏳ Sending...'; btn.disabled = true;
-  fetch('/send-email', {
+  fetch('/api/send-email', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
